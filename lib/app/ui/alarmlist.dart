@@ -9,14 +9,15 @@ import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:grouped_list/grouped_list.dart';
 import 'package:sliding_up_panel/sliding_up_panel.dart';
-
 import 'package:kakao_flutter_sdk_common/kakao_flutter_sdk_common.dart';
-
 import '../controller/alarm_service.dart';
 import '../controller/auth_service.dart';
+import '../controller/notification_controller.dart';
 import 'color.dart';
 import 'login.dart';
 import 'globalWidget.dart';
+
+bool init = true;
 
 /// 홈페이지
 class ArlamList extends StatefulWidget {
@@ -32,6 +33,14 @@ class _ArlamListState extends State<ArlamList> {
     Get.put(AreaSelectController());
 
     final authService = context.read<AuthService>();
+    final alarmService = context.read<AlarmService>();
+    final user = authService.currentUser();
+
+    if (init == true) {
+      // 토큰 업데이트
+      alarmService.updateToken(user!.uid, token_g);
+      init = false;
+    }
 
     return Consumer<AlarmService>(
       builder: (context, alarmService, child) {
@@ -94,7 +103,8 @@ class _ArlamListState extends State<ArlamList> {
               body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                 // stream: alarmService.read(user.uid),
                 stream: FirebaseFirestore.instance
-                    .collection('inprogress')
+                    .collection('inprogress2')
+                    .limit(100)
                     .orderBy('startTime', descending: true)
                     .snapshots(),
                 builder: (context, snapshot) {
@@ -115,6 +125,7 @@ class _ArlamListState extends State<ArlamList> {
                   // if (documents.isEmpty) {
                   //   return Center(child: Text("회원 목록을 준비 중입니다."));
                   // }
+
                   return ScrollConfiguration(
                     behavior: MyBehavior(),
                     child: ListView.builder(
@@ -595,7 +606,8 @@ class MessageBubble extends StatelessWidget {
                           Container(
                             width: 203,
                             child: Text(
-                              '${area}  |  ${shop}',
+                              '${area}  | ',
+                              // '${area}  |  ${shop}',
                               overflow: TextOverflow.clip,
                               maxLines: 3,
                               style: TextStyle(
@@ -628,7 +640,7 @@ class MessageBubble extends StatelessWidget {
                             child: Text(
                               '${content}',
                               overflow: TextOverflow.clip,
-                              maxLines: 5,
+                              maxLines: 3,
                               style: TextStyle(
                                   fontSize: 14, color: Color(0xFF737373)),
                             ),

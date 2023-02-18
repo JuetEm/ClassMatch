@@ -1,7 +1,11 @@
+import 'package:classmatch/app/controller/notification_controller.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'alarm_service.dart';
 
 class AuthService extends ChangeNotifier {
+  final fcmCollection = FirebaseFirestore.instance.collection('fcmInfo');
   User? currentUser() {
     // 현재 유저(로그인 되지 않은 경우 null 반환)
     return FirebaseAuth.instance.currentUser;
@@ -29,6 +33,23 @@ class AuthService extends ChangeNotifier {
         email: email,
         password: password,
       );
+
+      final user = currentUser();
+      print(user!.uid);
+      timestamp = Timestamp.now();
+
+      // firebase auth 회원 가입
+      try {
+        await fcmCollection.add({
+          'uid': user.uid, // 유저 식별자
+          'token': token_g, // fcm 토큰
+          'timestamp': timestamp, // 시간
+        });
+      } catch (e) {
+        // Firebase auth 이외의 에러 발생
+        // onError(e.toString());
+        print(e.toString());
+      }
 
       // 성공 함수 호출
       onSuccess();

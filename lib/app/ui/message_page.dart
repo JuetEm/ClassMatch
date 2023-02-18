@@ -14,9 +14,9 @@ class MessagePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     debugPrint('MessagePage >> build');
-    // TextEditingController _idController;
-    // _idController = TextEditingController();
-    // _idController.text = token_g;
+    TextEditingController _idController;
+    _idController = TextEditingController();
+    _idController.text = token_g;
     return Scaffold(
       appBar: AppBar(
         title: Text("대강 구인 모집 리스트2"),
@@ -58,67 +58,64 @@ class MessagePage extends StatelessWidget {
       ),
       body: Container(
         color: Colors.red,
-        child: Center(
-          child: Obx(() {
-            return Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // TextField(
-                //   decoration: InputDecoration(labelText: 'Enter Message'),
-                //   controller: _idController,
-                //   keyboardType: TextInputType.multiline,
-                //   minLines: 1, // <-- SEE HERE
-                //   maxLines: 5, // <-- SEE HERE
-                // ),
-                Text(
-                  token_g.toString(),
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+        child: Center(child: Obx(() {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // TextField(
+              //   decoration: InputDecoration(labelText: 'Enter Message'),
+              //   controller: _idController,
+              //   keyboardType: TextInputType.multiline,
+              //   minLines: 1, // <-- SEE HERE
+              //   maxLines: 5, // <-- SEE HERE
+              // ),
+              Text(
+                token_g.toString(),
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 20.0,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                NotificationController
+                    .to.remoteMessage.value.notification!.title
+                    .toString(),
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  NotificationController
-                      .to.remoteMessage.value.notification!.title
-                      .toString(),
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                NotificationController.to.remoteMessage.value.notification!.body
+                    .toString(),
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(
-                  height: 20.0,
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                NotificationController.to.dateTime.value.toString(),
+                style: const TextStyle(
+                  fontSize: 20.0,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
-                Text(
-                  NotificationController
-                      .to.remoteMessage.value.notification!.body
-                      .toString(),
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const SizedBox(
-                  height: 20.0,
-                ),
-                Text(
-                  NotificationController.to.dateTime.value.toString(),
-                  style: const TextStyle(
-                    fontSize: 20.0,
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ],
-            );
-          }),
-        ),
+              ),
+            ],
+          );
+        })),
       ),
     );
   }
