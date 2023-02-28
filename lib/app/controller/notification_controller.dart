@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-String token_g = '';
+String tokenFCM = '';
 
 class NotificationController extends GetxController {
   static NotificationController get to => Get.find();
@@ -25,7 +25,7 @@ class NotificationController extends GetxController {
   void _getToken() {
     _messaging.getToken().then((token) {
       debugPrint('token~: [$token]');
-      token_g = token!;
+      tokenFCM = token!;
     });
   }
 

@@ -43,9 +43,11 @@ dependencies:
   firebase_messaging: ^14.2.1
   flutter_local_notifications: ^13.0.0
   get: ^4.6.5
-  grouped_list: ^5.1.2
-  sliding_up_panel: ^2.0.0+1
   kakao_flutter_sdk: ^1.4.0
+  shared_preferences: ^2.0.17
+  introduction_screen: ^3.1.6
+  flutter_animate: ^4.1.0
+  amplitude_flutter: ^3.13.0
 
 dev_dependencies:
   flutter_test:
@@ -88,35 +90,17 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: Pretendard
+    # - family: Pretendard
+    #   fonts:
+    #     - asset: assets/fonts/Pretendard/Pretendard-Regular.otf
+    #       weight: 400
+    #       style: italic
+    - family: Noto_Sans
       fonts:
-        - asset: assets/fonts/Pretendard/Pretendard-Thin.otf
-          weight: 100
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-ExtraLight.otf
-          weight: 200
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-Light.otf
-          weight: 300
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-Regular.otf
+        - asset: assets/fonts/Noto_Sans/NotoSansKR-Regular.otf
           weight: 400
           style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-Medium.otf
-          weight: 500
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-SemiBold.otf
-          weight: 600
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-Bold.otf
-          weight: 700
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-ExtraBold.otf
-          weight: 800
-          style: italic
-        - asset: assets/fonts/Pretendard/Pretendard-Black.otf
-          weight: 900
-          style: italic
+
   # fonts:
   #   - family: Schyler
   #     fonts:

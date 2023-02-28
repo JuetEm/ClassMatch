@@ -16,21 +16,50 @@
   -->
   <base href="$FLUTTER_BASE_HREF">
 
-  <meta charset="UTF-8">
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+ <!-- Chrome, Firefox, Opera -->
+ <meta content='#FFFFFF' name='theme-color'/>
 
-  <!-- iOS meta tags & icons -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="classmatch">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
-
-  <title>classmatch</title>
-  <link rel="manifest" href="manifest.json">
+ <!-- Windows Phone -->
+ <meta content='#FFFFFF' name='msapplication-navbutton-color'/>
+ 
+ <!-- iOS Safari -->
+ <meta content='#FFFFFF' name='apple-mobile-web-app-status-bar-style'/>
+ <meta content='yes' name='apple-mobile-web-app-capable'/>
+ 
+   <meta charset="UTF-8">
+   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+   <meta name="description" content="A new Flutter project.">
+ 
+   <!-- iOS meta tags & icons -->
+   <meta name="apple-mobile-web-app-capable" content="yes">
+   <meta name="apple-mobile-web-app-status-bar-style" content="black">
+   <meta name="apple-mobile-web-app-title" content="BetterCoach">
+   <link rel="apple-touch-icon" href="256.png">
+ 
+   <!-- Favicon -->
+   <link rel="icon" type="image/png" href="favicon.png"/>
+ 
+   <title>::클래스매치:: 필라테스 강사를 위한 대강알림앱</title>
+   <link rel="manifest" href="manifest.json">
+ 
+   <meta property="og:type" content="website">
+   <meta property="og:title" content="클래스매치">
+   <meta property="og:description" content="필라테스 강사를 위한 대강알림앱">
+   <meta property="og:image" content="icons/ogimage.png">
+   <meta property="og:url" content="http://classmatch.co.kr/">
+   <meta property="og:site_name" content="클래스매치 :: 필라테스 강사를 위한 대강알림앱">
+   <meta property="og:locale" content="ko_KR">
+     <!-- 다음의 태그는 필수는 아니지만, 포함하는 것을 추천함 1200 / 630권장-->
+     <meta property="og:image:width" content="467">
+     <meta property="og:image:height" content="201">
+ 
+ 
+ 
+   <meta name="twitter:card" content="summary">
+   <meta name="twitter:title" content="클래스매치">
+   <meta name="twitter:description" content="필라테스 강사를 위한 대강알림앱">
+   <meta name="twitter:image" content="http://classmatch.co.kr/">
+   <meta name="twitter:domain" content="클래스매치">
 
   <script>
     // The value below is injected by flutter build, do not touch.
@@ -38,6 +67,32 @@
   </script>
   <!-- This script adds the flutter initialization JS code -->
   <script src="flutter.js" defer></script>
+  <script type="text/javascript" defer>
+    (function(e,t){var n=e.amplitude||{_q:[],_iq:{}};var r=t.createElement("script")
+     ;r.type="text/javascript"
+     ;r.integrity="sha384-UcvEbHmT0LE2ZB30Y3FmY3Nfw6puAKXz/LpCFuoywywYikMOr/519Uu1yNq2nL9w"
+     ;r.crossOrigin="anonymous";r.async=true
+     ;r.src="https://cdn.amplitude.com/libs/amplitude-8.12.0-min.gz.js"
+     ;r.onload=function(){if(!e.amplitude.runQueuedFunctions){
+     console.log("[Amplitude] Error: could not load SDK")}}
+     ;var s=t.getElementsByTagName("script")[0];s.parentNode.insertBefore(r,s)
+     ;function i(e,t){e.prototype[t]=function(){
+     this._q.push([t].concat(Array.prototype.slice.call(arguments,0)));return this}}
+     var o=function(){this._q=[];return this}
+     ;var a=["add","append","clearAll","prepend","set","setOnce","unset","preInsert","postInsert","remove"]
+     ;for(var c=0;c<a.length;c++){i(o,a[c])}n.Identify=o;var u=function(){this._q=[]
+     ;return this}
+     ;var l=["setProductId","setQuantity","setPrice","setRevenueType","setEventProperties"]
+     ;for(var p=0;p<l.length;p++){i(u,l[p])}n.Revenue=u
+     ;var d=["init","logEvent","logRevenue","setUserId","setUserProperties","setOptOut","setVersionName","setDomain","setDeviceId","enableTracking","setGlobalUserProperties","identify","clearUserProperties","setGroup","logRevenueV2","regenerateDeviceId","groupIdentify","onInit","logEventWithTimestamp","logEventWithGroups","setSessionId","resetSessionId","getDeviceId","getUserId","setMinTimeBetweenSessionsMillis","setEventUploadThreshold","setUseDynamicConfig","setServerZone","setServerUrl","sendEvents","setLibrary","setTransport"]
+     ;function v(e){function t(t){e[t]=function(){
+     e._q.push([t].concat(Array.prototype.slice.call(arguments,0)))}}
+     for(var n=0;n<d.length;n++){t(d[n])}}v(n);n.getInstance=function(e){
+     e=(!e||e.length===0?"$default_instance":e).toLowerCase()
+     ;if(!Object.prototype.hasOwnProperty.call(n._iq,e)){n._iq[e]={_q:[]};v(n._iq[e])
+     }return n._iq[e]};e.amplitude=n})(window,document);
+ </script>
+ 
 </head>
 <body>
   <script>
