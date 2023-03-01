@@ -12,6 +12,7 @@ class Palette {
   static const Color backgroundOrange = Color(0xFFFFDDBB);
 
   static const Color buttonOrange = Color(0xFFFF8A29);
+  static const Color buttonKakao = Color(0xFFFEE500);
   static const Color mainPoint = Color(0xFF615CFE);
   static const Color statusRed = Color(0xFFFF2D55);
   static const Color statusTeal = Color(0xFF5AC8FA);

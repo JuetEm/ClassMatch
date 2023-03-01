@@ -23,6 +23,7 @@ class AuthService extends ChangeNotifier {
     required String email, // 이메일
     required String password, // 비밀번호
     required String phoneNumber,
+    required String confirmpassword,
     required String name,
     required bool isChecked,
     required Function onSuccess, // 가입 성공시 호출되는 함수
@@ -35,14 +36,17 @@ class AuthService extends ChangeNotifier {
     if (name.isEmpty) {
       onError("이름을 입력해 주세요.");
       return;
+    } else if (phoneNumber.isEmpty) {
+      onError("전화번호를 입력해 주세요.");
+      return;
     } else if (email.isEmpty) {
       onError("이메일을 입력해 주세요.");
       return;
     } else if (!regex.hasMatch(email)) {
       onError("잘못된 이메일 형식입니다.");
       return;
-    } else if (phoneNumber.isEmpty) {
-      onError("전화번호를 입력해 주세요.");
+    } else if (password != confirmpassword) {
+      onError("비밀번호가 일치하지 않습니다.");
       return;
     } else if (isChecked == false) {
       onError("개인정보 수집 및 활용에 동의 하셔야 신청할 수 있습니다.");
@@ -120,7 +124,19 @@ class AuthService extends ChangeNotifier {
       onSuccess();
     } on FirebaseAuthException catch (e) {
       // Firebase auth 에러 발생
-      onError(e.message!);
+      if (e.code == 'weak-password') {
+        onError('비밀번호를 6자리 이상 입력해 주세요.');
+      } else if (e.code == 'email-already-in-use') {
+        onError('이미 가입된 이메일 입니다.');
+      } else if (e.code == 'invalid-email') {
+        onError('이메일 형식을 확인해주세요.');
+      } else if (e.code == 'user-not-found') {
+        onError('일치하는 이메일이 없습니다.');
+      } else if (e.code == 'wrong-password') {
+        onError('비밀번호가 일치하지 않습니다.');
+      } else {
+        onError(e.message!);
+      }
     } catch (e) {
       // Firebase auth 이외의 에러 발생
       onError(e.toString());

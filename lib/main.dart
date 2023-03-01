@@ -4,11 +4,14 @@ import 'package:classmatch/app/landing/landing_controller.dart';
 import 'package:classmatch/app/routes/routes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'app/controller/auth_service.dart';
 import 'app/controller/bucket_service.dart';
 import 'app/controller/alarm_service.dart';
+import 'app/ui/alarmlist.dart';
 import 'app/ui/login.dart';
 import 'firebase_options.dart';
 import 'app/controller/notification_controller.dart';
@@ -17,6 +20,7 @@ late SharedPreferences prefs;
 bool isLogInActiveChecked = false;
 bool isExpired = prefs.getBool("isExpired") ?? false;
 bool isOnboarded = prefs.getBool("isOnboarded") ?? false;
+String talkName = "";
 
 late TextEditingController emailController;
 late TextEditingController passwordController;
@@ -39,7 +43,7 @@ void main() async {
 
   // runApp() 호출 전 Flutter SDK 초기화
   KakaoSdk.init(
-    nativeAppKey: '373f18bbec60b8e2d754cdb63ff12b32',
+    // nativeAppKey: '373f18bbec60b8e2d754cdb63ff12b32',
     javaScriptAppKey: '2ec57d1e5f1bdf8d161173e5086b828d',
   );
 

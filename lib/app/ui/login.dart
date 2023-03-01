@@ -1,10 +1,13 @@
 import 'package:classmatch/app/config/analytics_config.dart';
 import 'package:classmatch/app/controller/alarm_service.dart';
+import 'package:classmatch/app/controller/dialog_warning.dart';
+import 'package:classmatch/app/controller/login_controller.dart';
 import 'package:classmatch/app/ui/globa_widget.dart';
 import 'package:classmatch/app/ui/onboarding.dart';
 import 'package:classmatch/app/ui/service_over.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../../main.dart';
 import '../controller/auth_service.dart';
@@ -14,6 +17,8 @@ import 'package:amplitude_flutter/amplitude.dart';
 
 Color focusColor = const Color(0xFF615CFE);
 Color normalColor = Palette.gray66;
+// 소셜 로그인 Controller
+LoginController loginController = LoginController();
 
 /// 로그인 페이지
 class LoginPage extends StatefulWidget {
@@ -189,57 +194,58 @@ class _LoginPageState extends State<LoginPage> {
                                     // int가 나오면 해당 값을 출력
                                     // debugPrint('val: $val');
                                     isExpired = val;
-
                                     prefs.setBool("isExpired", isExpired);
-                                    // if (isExpired == true) {
-                                    //   prefs.setBool("isExpired", true);
-                                    // } else {
-                                    //   prefs.setBool("isExpired", false);
-                                    // }
-
                                     debugPrint(
                                         'isExpired: ${isExpired.toString()}');
-
-                                    // final Identify identify = Identify();
-
-                                    // Analytics_config.analytics
-                                    //     .identify(identify);
 
                                     // Set user Id
                                     Analytics_config.analytics
                                         .setUserId(user.uid);
 
-                                    //amplitude
-                                    Amplitude.getInstance()
-                                        .logEvent('PAGE_VIEW : LOGIN');
+                                    final talkNameFromSever =
+                                        alarmService.findtalkName(user.uid);
+                                    talkNameFromSever.then((val) {
+                                      // int가 나오면 해당 값을 출력
+                                      debugPrint('처음서버값: $val');
+                                      //해당 함수는 빌드가 끝난 다음 수행 된다.
+                                      //https://velog.io/@jun7332568/%ED%94%8C%EB%9F%AC%ED%84%B0flutter-setState-or-markNeedsBuild-called-during-build.-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
+                                      // WidgetsBinding.instance!.addPostFrameCallback((_) {
+                                      talkName = val;
+                                      //amplitude
+                                      Amplitude.getInstance()
+                                          .logEvent('PAGE_VIEW : LOGIN');
 
-                                    // 로그인 성공
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(builder: (_) {
-                                        if (isExpired) {
-                                          //amplitude
-                                          Amplitude.getInstance().logEvent(
-                                              'PAGE_VIEW : SERVICE_OVER');
-                                          return const ServiceOverPage();
-                                        } else if (isOnboarded) {
-                                          //amplitude
-                                          Amplitude.getInstance()
-                                              .logEvent('PAGE_VIEW : LIST');
-                                          return const ArlamListPage();
-                                        } else {
-                                          //amplitude
-                                          Amplitude.getInstance()
-                                              .logEvent('PAGE_VIEW : ONBOARD');
-                                          return const OnboardingPage();
-                                        }
-                                      }),
-                                      // => isExpired
-                                      //     ? const ServiceOverPage()
-                                      //     : isOnboarded
-                                      //         ? const ArlamListPage()
-                                      //         : const OnboardingPage()),
-                                    );
+                                      // 로그인 성공
+                                      Navigator.pushReplacement(
+                                        context,
+                                        MaterialPageRoute(builder: (_) {
+                                          if (isExpired) {
+                                            //amplitude
+                                            Amplitude.getInstance().logEvent(
+                                                'PAGE_VIEW : SERVICE_OVER');
+                                            return const ServiceOverPage();
+                                          } else if (isOnboarded) {
+                                            //amplitude
+                                            Amplitude.getInstance()
+                                                .logEvent('PAGE_VIEW : LIST');
+                                            return const ArlamListPage();
+                                          } else {
+                                            //amplitude
+                                            Amplitude.getInstance().logEvent(
+                                                'PAGE_VIEW : ONBOARD');
+                                            return const OnboardingPage();
+                                          }
+                                        }),
+                                        // => isExpired
+                                        //     ? const ServiceOverPage()
+                                        //     : isOnboarded
+                                        //         ? const ArlamListPage()
+                                        //         : const OnboardingPage()),
+                                      );
+                                    }).catchError((error) {
+                                      // error가 해당 에러를 출력
+                                      debugPrint('error: $error');
+                                    });
                                   }).catchError((error) {
                                     // error가 해당 에러를 출력
                                     debugPrint('error: $error');
@@ -294,7 +300,7 @@ class _LoginPageState extends State<LoginPage> {
                           //   },
                           // ),
 
-                          /// 로그인 버튼
+                          /// 무료 체험 신청
                           ElevatedButton(
                             style: ElevatedButton.styleFrom(
                               shape: RoundedRectangleBorder(
@@ -307,6 +313,9 @@ class _LoginPageState extends State<LoginPage> {
                               minimumSize: const Size.fromHeight(50), // NEW
                             ),
                             onPressed: () {
+                              //amplitude
+                              Amplitude.getInstance()
+                                  .logEvent('BTN_CLK : FREE TRIAL');
                               registrationDialog(
                                   context, "무료 체험 신청", authService);
 
@@ -349,6 +358,50 @@ class _LoginPageState extends State<LoginPage> {
 
                           const SizedBox(height: 10),
 
+                          // /// 더미 DB 업그레이드 - 함부로 사용금지
+                          // ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(6),
+                          //     ),
+                          //     padding: const EdgeInsets.all(0),
+                          //     elevation: 0,
+                          //     backgroundColor: Palette.mainPoint,
+
+                          //     minimumSize: const Size.fromHeight(50), // NEW
+                          //   ),
+                          //   onPressed: () {
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'WbUBzPLZF0ZmQ0Gct42du4HCQOV2');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'WefdLhbRDvbN6fZ4io9gnyGPt6k1');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: '3lBhM6IrHzO6eIFtRQR7oRE3DXm2');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'EbxlRWoiXiSfikNnk1TOHBgt0eo2');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'p3jUBepvweP5iAZzAdrvAwbOHZH2');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'njPTk7ecrsU2RhV1c27gfqTx3Pz1');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'LCnNOTXlxeWNURDM0S4rFAJLxME2');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'KenypIS6fBZRHhAxhxc0gyzYPMI3');
+                          //     // alarmService.syncdBupdate(
+                          //     //     uid: 'rWMXiRVJf2VWvIs09gQpfIhdgwu1');
+                          //     // alarmService.syncdBupdate(
+                          //         // uid: 'fiFy9TfyJyTM1q8bpC8bBKvzcwi1');
+                          //   },
+                          //   child: const Padding(
+                          //     padding: EdgeInsets.all(14.0),
+                          //     child: Text("더미 회원DB 업데이트",
+                          //         style: TextStyle(
+                          //           fontSize: 16,
+                          //           letterSpacing: -0.33,
+                          //         )),
+                          //   ),
+                          // ),
+
                           // // 임시버튼
                           // // 회원가입 버튼
                           // ElevatedButton(
@@ -383,33 +436,37 @@ class _LoginPageState extends State<LoginPage> {
                           //   },
                           // ),
 
-                          // /// 회원가입 버튼
+                          // /// 카카오로 로그인
                           // ElevatedButton(
-                          //     child: Text("카카오 로그인", style: TextStyle(fontSize: 21)),
+                          //     child: const Text("카카오 로그인",
+                          //         style: TextStyle(fontSize: 21)),
                           //     onPressed: () async {
                           //       if (await isKakaoTalkInstalled()) {
                           //         try {
                           //           await UserApi.instance.loginWithKakaoTalk();
                           //           print('카카오톡으로 로그인 성공');
-                          //           _get_user_info();
+                          //           // _get_user_info();
                           //           // HomePage로 이동
                           //           Navigator.pushReplacement(
                           //             context,
                           //             MaterialPageRoute(
-                          //                 builder: (context) => ArlamList()),
+                          //                 builder: (context) =>
+                          //                     const ArlamListPage()),
                           //           );
                           //         } catch (error) {
                           //           print('카카오톡으로 로그인 실패 $error');
                           //           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
                           //           try {
-                          //             await UserApi.instance.loginWithKakaoAccount();
+                          //             await UserApi.instance
+                          //                 .loginWithKakaoAccount();
                           //             print('카카오계정으로 로그인 성공');
-                          //             _get_user_info();
+                          //             // _get_user_info();
                           //             // HomePage로 이동
                           //             Navigator.pushReplacement(
                           //               context,
                           //               MaterialPageRoute(
-                          //                   builder: (context) => ArlamList()),
+                          //                   builder: (context) =>
+                          //                       const ArlamListPage()),
                           //             );
                           //           } catch (error) {
                           //             print('카카오계정으로 로그인 실패 $error');
@@ -417,24 +474,156 @@ class _LoginPageState extends State<LoginPage> {
                           //         }
                           //       } else {
                           //         try {
-                          //           await UserApi.instance.loginWithKakaoAccount();
+                          //           await UserApi.instance
+                          //               .loginWithKakaoAccount();
                           //           print('카카오계정으로 로그인 성공');
-                          //           _get_user_info();
+                          //           // _get_user_info();
                           //           // HomePage로 이동
                           //           Navigator.pushReplacement(
                           //             context,
                           //             MaterialPageRoute(
-                          //                 builder: (context) => ArlamListOld()),
+                          //                 builder: (context) =>
+                          //                     const ArlamListPage()),
                           //           );
                           //         } catch (error) {
                           //           print('카카오계정으로 로그인 실패 $error');
                           //         }
                           //       }
                           //     }),
+
+                          // // 카카오톡으로 로그인 버튼
+                          // ElevatedButton(
+                          //   style: ElevatedButton.styleFrom(
+                          //     shape: RoundedRectangleBorder(
+                          //       borderRadius: BorderRadius.circular(10),
+                          //     ),
+                          //     padding: const EdgeInsets.all(0),
+                          //     elevation: 0,
+                          //     backgroundColor: Palette.buttonKakao,
+                          //   ),
+                          //   onPressed: () async {
+                          //     try {
+                          //       // web 방식 로그인 구현
+                          //       print("JAVASCRIPT - 카카오톡으로 로그인 시작");
+                          //       loginController.kakaoSignIn().then(
+                          //         (value) {
+                          //           print("value : $value");
+                          //           // 서버에서 한번 읽어 와야함.
+                          //           final user = context
+                          //               .read<AuthService>()
+                          //               .currentUser();
+                          //           // 종료결과 불러오기
+                          //           final getUserInfoFromServer =
+                          //               alarmService.getUserInfo(user!.uid);
+                          //           getUserInfoFromServer.then((val) {
+                          //             // int가 나오면 해당 값을 출력
+                          //             // debugPrint('val: $val');
+                          //             isExpired = val;
+                          //             prefs.setBool("isExpired", isExpired);
+                          //             debugPrint(
+                          //                 'isExpired: ${isExpired.toString()}');
+
+                          //             // Set user Id
+                          //             Analytics_config.analytics
+                          //                 .setUserId(user.uid);
+
+                          //             final talkNameFromSever =
+                          //                 alarmService.findtalkName(user.uid);
+                          //             talkNameFromSever.then((val) {
+                          //               // int가 나오면 해당 값을 출력
+                          //               debugPrint('처음서버값: $val');
+                          //               //해당 함수는 빌드가 끝난 다음 수행 된다.
+                          //               //https://velog.io/@jun7332568/%ED%94%8C%EB%9F%AC%ED%84%B0flutter-setState-or-markNeedsBuild-called-during-build.-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
+                          //               // WidgetsBinding.instance!.addPostFrameCallback((_) {
+                          //               talkName = val;
+                          //               //amplitude
+                          //               Amplitude.getInstance()
+                          //                   .logEvent('PAGE_VIEW : LOGIN');
+
+                          //               // 로그인 성공
+                          //               Navigator.pushReplacement(
+                          //                 context,
+                          //                 MaterialPageRoute(builder: (_) {
+                          //                   if (isExpired) {
+                          //                     //amplitude
+                          //                     Amplitude.getInstance().logEvent(
+                          //                         'PAGE_VIEW : SERVICE_OVER');
+                          //                     return const ServiceOverPage();
+                          //                   } else if (isOnboarded) {
+                          //                     //amplitude
+                          //                     Amplitude.getInstance()
+                          //                         .logEvent('PAGE_VIEW : LIST');
+                          //                     return const ArlamListPage();
+                          //                   } else {
+                          //                     //amplitude
+                          //                     Amplitude.getInstance().logEvent(
+                          //                         'PAGE_VIEW : ONBOARD');
+                          //                     return const OnboardingPage();
+                          //                   }
+                          //                 }),
+                          //                 // => isExpired
+                          //                 //     ? const ServiceOverPage()
+                          //                 //     : isOnboarded
+                          //                 //         ? const ArlamListPage()
+                          //                 //         : const OnboardingPage()),
+                          //               );
+                          //             }).catchError((error) {
+                          //               // error가 해당 에러를 출력
+                          //               debugPrint('error: $error');
+                          //             });
+                          //           }).catchError((error) {
+                          //             // error가 해당 에러를 출력
+                          //             debugPrint('error: $error');
+                          //           });
+                          //         },
+                          //       );
+                          //     } catch (error) {
+                          //       print('카카오톡으로 로그인 실패 - error : $error');
+                          //     }
+                          //   },
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.all(14.0),
+                          //     child: SizedBox(
+                          //       child: Row(
+                          //         mainAxisAlignment: MainAxisAlignment.center,
+                          //         children: [
+                          //           SizedBox(
+                          //               child: Image.asset(
+                          //                   "assets/images/kakao.png")),
+                          //           const SizedBox(width: 5),
+                          //           const Text("카카오로 로그인하기",
+                          //               style: TextStyle(
+                          //                   fontSize: 16,
+                          //                   color: Palette.gray00)),
+                          //         ],
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
                   ),
+
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     debugPrint("카톡로그인 버튼 클릭");
+                  //     await viewModel.login();
+                  //     debugPrint("카톡로그인 버튼 클릭 - 로그인 수행 끝");
+                  //     // Navigator.of(context).pushNamed(Routes.favareaSelect);
+                  //     setState(() {});
+                  //   },
+                  //   child: const Text('Login'),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     debugPrint("카톡로그아웃 버튼 클릭");
+                  //     await viewModel.logout();
+                  //     debugPrint("카톡로그아웃 버튼 클릭 - 로그인 수행 끝");
+                  //     setState(() {});
+                  //   },
+                  //   child: const Text('Logout'),
+                  // ),
                   // Center(
                   //   child: Text(
                   //     user == null ? "로그인해 주세요 🙂" : "${user.email}님 안녕하세요 👋",
@@ -516,241 +705,357 @@ class _RegitrationState extends State<Regitration> {
   FocusNode emailFocusNodeDialog = FocusNode();
   FocusNode passwordFocusNodeDialog = FocusNode();
   FocusNode passwordFocusNodeConfirmDialog = FocusNode();
+  FocusNode checkedBocFocusNode = FocusNode();
   bool passwordVisible = false;
   bool _isChecked = false;
+
+  final GlobalKey emailKey = GlobalKey();
+  final GlobalKey nameKey = GlobalKey();
+  final GlobalKey phoneKey = GlobalKey();
+  final GlobalKey passwordKey = GlobalKey();
+  final GlobalKey passwordConbfirmKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     debugPrint(passwordVisible.toString());
-    return AlertDialog(
-      // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+    final controller = Get.put(DialogWarning());
 
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(
-            width: 350,
-            child: Text(
-              widget.bodytextdata,
-            ),
-          ),
-          const SizedBox(height: 10),
+    return SingleChildScrollView(
+      child: AlertDialog(
+        // RoundedRectangleBorder - Dialog 화면 모서리 둥글게 조절
+        shape:
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
 
-          //이름
-
-          TextField(
-            controller: nameControllerDialog,
-            // obscureText: false, // 비밀번호 안보이게
-            style: TextStyle(color: normalColor),
-            decoration: InputDecoration(
-              labelText: "이름",
-              labelStyle: TextStyle(
-                  color:
-                      nameFocusNodeDialog.hasFocus ? focusColor : normalColor),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Palette.gray33, width: 0),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            SizedBox(
+              width: 350,
+              child: Text(
+                widget.bodytextdata,
               ),
-              focusColor: focusColor,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: focusColor,
+            ),
+            const SizedBox(height: 10),
+
+            //이름
+
+            TextField(
+              focusNode: nameFocusNodeDialog,
+              onSubmitted: (value) {
+                phoneNumberFocusNodeDialog.requestFocus();
+              },
+              controller: nameControllerDialog,
+              // obscureText: false, // 비밀번호 안보이게
+              style: TextStyle(
+                  color: normalColor, fontSize: 14, letterSpacing: -0.33),
+              decoration: InputDecoration(
+                labelText: "이름",
+                labelStyle: TextStyle(
+                    color: nameFocusNodeDialog.hasFocus
+                        ? focusColor
+                        : normalColor),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Palette.gray33, width: 0),
                 ),
-              ),
-            ),
-          ),
-
-          /// 전화번호
-          TextField(
-            controller: phoneNumberControllerDialog,
-            // obscureText: false, // 비밀번호 안보이게
-
-            style: TextStyle(color: normalColor),
-            decoration: InputDecoration(
-              labelText: "휴대폰번호",
-              labelStyle: TextStyle(
-                  color: phoneNumberFocusNodeDialog.hasFocus
-                      ? focusColor
-                      : normalColor),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Palette.gray33, width: 0),
-              ),
-              focusColor: focusColor,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: focusColor,
+                focusColor: focusColor,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: focusColor,
+                  ),
                 ),
               ),
             ),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly, //숫자만!
-              NumberFormatter(), // 자동하이픈
-              LengthLimitingTextInputFormatter(13) //13자리만 입력받도록 하이픈 2개+숫자 11개
-            ],
-            // inputFormatters: [
-            //   FilteringTextInputFormatter.allow(RegExp('[0-9]'))
-            // ],
-          ),
 
-          /// 이메일
-          TextField(
-            controller: emailControllerDialog,
-            style: TextStyle(
-                color: normalColor, fontSize: 14, letterSpacing: -0.33),
-            decoration: InputDecoration(
-              labelText: "이메일",
-              labelStyle: TextStyle(
-                  color:
-                      emailFocusNodeDialog.hasFocus ? focusColor : normalColor),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Palette.gray33, width: 0),
-              ),
-              focusColor: focusColor,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: focusColor,
+            /// 전화번호
+            TextField(
+              focusNode: phoneNumberFocusNodeDialog,
+              onSubmitted: (value) {
+                emailFocusNodeDialog.requestFocus();
+              },
+              controller: phoneNumberControllerDialog,
+              // obscureText: false, // 비밀번호 안보이게
+
+              style: TextStyle(
+                  color: normalColor, fontSize: 14, letterSpacing: -0.33),
+              decoration: InputDecoration(
+                labelText: "휴대폰번호",
+                labelStyle: TextStyle(
+                    color: phoneNumberFocusNodeDialog.hasFocus
+                        ? focusColor
+                        : normalColor),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Palette.gray33, width: 0),
+                ),
+                focusColor: focusColor,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: focusColor,
+                  ),
                 ),
               ),
-            ),
-            keyboardType: TextInputType.emailAddress,
-          ),
-
-          /// 비밀번호
-          TextField(
-            controller: passwordControllerDialog,
-            obscureText: !passwordVisible, //This will obscure text dynamically
-            style: TextStyle(
-                color: normalColor, fontSize: 14, letterSpacing: -0.33),
-            // Here is key idea
-
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(
-                  size: 14,
-                  // Based on passwordVisible state choose the icon
-                  passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Palette.gray66,
-                ),
-                onPressed: () {
-                  // Update the state i.e. toogle the state of passwordVisible variable
-                  setState(() {
-                    passwordVisible = !passwordVisible;
-                    debugPrint("체크");
-                  });
-                },
-              ),
-              labelText: "비밀번호",
-              labelStyle: TextStyle(
-                  color: passwordFocusNodeDialog.hasFocus
-                      ? focusColor
-                      : normalColor),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Palette.gray33, width: 0),
-              ),
-              focusColor: focusColor,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: focusColor,
-                ),
-              ),
-            ),
-            keyboardType: TextInputType.visiblePassword,
-          ),
-          const SizedBox(height: 10),
-
-          /// 비밀번호 확인
-          TextField(
-            controller: passwordControllerConfirmDialog,
-            obscureText: !passwordVisible, //This will obscure text dynamically
-            style: TextStyle(
-                color: normalColor, fontSize: 14, letterSpacing: -0.33),
-            // Here is key idea
-
-            decoration: InputDecoration(
-              suffixIcon: IconButton(
-                icon: Icon(
-                  size: 14,
-                  // Based on passwordVisible state choose the icon
-                  passwordVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Palette.gray66,
-                ),
-                onPressed: () {
-                  // Update the state i.e. toogle the state of passwordVisible variable
-                  setState(() {
-                    passwordVisible = !passwordVisible;
-                    debugPrint("체크");
-                  });
-                },
-              ),
-              labelText: "비밀번호 확인",
-              labelStyle: TextStyle(
-                  color: passwordFocusNodeConfirmDialog.hasFocus
-                      ? focusColor
-                      : normalColor),
-              enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Palette.gray33, width: 0),
-              ),
-              focusColor: focusColor,
-              focusedBorder: UnderlineInputBorder(
-                borderSide: BorderSide(
-                  color: focusColor,
-                ),
-              ),
-            ),
-            keyboardType: TextInputType.visiblePassword,
-          ),
-          const SizedBox(height: 35),
-          const Text("개인정보 수집 및 활용에 동의하십니까?"),
-          const SizedBox(height: 10),
-
-          SizedBox(
-            width: 200,
-            child: Row(
-              children: [
-                const SizedBox(width: 10),
-                Checkbox(
-                    value: _isChecked,
-                    onChanged: (value) {
-                      setState(() {
-                        _isChecked = value!;
-                      });
-                    }),
-                const Text("네"),
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly, //숫자만!
+                NumberFormatter(), // 자동하이픈
+                LengthLimitingTextInputFormatter(13) //13자리만 입력받도록 하이픈 2개+숫자 11개
               ],
+              // inputFormatters: [
+              //   FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+              // ],
             ),
+
+            /// 이메일
+            TextField(
+              focusNode: emailFocusNodeDialog,
+              onSubmitted: (value) {
+                passwordFocusNodeDialog.requestFocus();
+              },
+              controller: emailControllerDialog,
+              style: TextStyle(
+                  color: normalColor, fontSize: 14, letterSpacing: -0.33),
+              decoration: InputDecoration(
+                labelText: "이메일",
+                labelStyle: TextStyle(
+                    color: emailFocusNodeDialog.hasFocus
+                        ? focusColor
+                        : normalColor),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Palette.gray33, width: 0),
+                ),
+                focusColor: focusColor,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: focusColor,
+                  ),
+                ),
+              ),
+              keyboardType: TextInputType.emailAddress,
+            ),
+
+            /// 비밀번호
+            TextFormField(
+              focusNode: passwordFocusNodeDialog,
+              onFieldSubmitted: (value) {
+                passwordFocusNodeConfirmDialog.requestFocus();
+              },
+              key: passwordKey,
+              controller: passwordControllerDialog,
+              obscureText:
+                  !passwordVisible, //This will obscure text dynamically
+              style: TextStyle(
+                  color: normalColor, fontSize: 14, letterSpacing: -0.33),
+              // Here is key idea
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return "Please enter password";
+                }
+                return null;
+              },
+              // onChanged: (value) {
+              //   if (passwordKey.currentState!.validate()) {
+              //     // If the form is valid, display a snackbar. In the real world,
+              //     // you'd often call a server or save the information in a database.
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(content: Text('Processing Data')),
+              //     );
+              //   }
+              // },
+
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    size: 14,
+                    // Based on passwordVisible state choose the icon
+                    passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Palette.gray66,
+                  ),
+                  onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                    setState(() {
+                      passwordVisible = !passwordVisible;
+                      debugPrint("체크");
+                    });
+                  },
+                ),
+                labelText: "비밀번호",
+                labelStyle: TextStyle(
+                    color: passwordFocusNodeDialog.hasFocus
+                        ? focusColor
+                        : normalColor),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Palette.gray33, width: 0),
+                ),
+                focusColor: focusColor,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: focusColor,
+                  ),
+                ),
+              ),
+              keyboardType: TextInputType.visiblePassword,
+            ),
+            const Text("비밀번호는 6자리 이상 입력해주세요",
+                style: TextStyle(
+                    color: Palette.gray66, fontSize: 12, letterSpacing: -0.33)),
+            const SizedBox(height: 10),
+
+            /// 비밀번호 확인
+            TextFormField(
+              focusNode: passwordFocusNodeConfirmDialog,
+              onFieldSubmitted: (value) {
+                checkedBocFocusNode.requestFocus();
+              },
+              controller: passwordControllerConfirmDialog,
+              obscureText:
+                  !passwordVisible, //This will obscure text dynamically
+              style: TextStyle(
+                  color: normalColor, fontSize: 14, letterSpacing: -0.33),
+              // Here is key idea
+
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  icon: Icon(
+                    size: 14,
+                    // Based on passwordVisible state choose the icon
+                    passwordVisible ? Icons.visibility : Icons.visibility_off,
+                    color: Palette.gray66,
+                  ),
+                  onPressed: () {
+                    // Update the state i.e. toogle the state of passwordVisible variable
+                    setState(() {
+                      passwordVisible = !passwordVisible;
+                      debugPrint("체크");
+                    });
+                  },
+                ),
+                labelText: "비밀번호 확인",
+                labelStyle: TextStyle(
+                    color: passwordFocusNodeConfirmDialog.hasFocus
+                        ? focusColor
+                        : normalColor),
+                enabledBorder: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Palette.gray33, width: 0),
+                ),
+                focusColor: focusColor,
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                    color: focusColor,
+                  ),
+                ),
+              ),
+              keyboardType: TextInputType.visiblePassword,
+            ),
+
+            const SizedBox(height: 10),
+            const Text("개인정보 수집 및 활용에 동의하십니까?",
+                style: TextStyle(
+                    color: Palette.gray66, fontSize: 12, letterSpacing: -0.33)),
+            const SizedBox(height: 10),
+
+            SizedBox(
+              width: 200,
+              child: Row(
+                children: [
+                  const SizedBox(width: 10),
+                  Checkbox(
+                      focusNode: checkedBocFocusNode,
+                      value: _isChecked,
+                      onChanged: (value) {
+                        setState(() {
+                          _isChecked = value!;
+                        });
+                      }),
+                  const Text("네",
+                      style: TextStyle(
+                          color: Palette.gray66,
+                          fontSize: 12,
+                          letterSpacing: -0.33)),
+                ],
+              ),
+            ),
+            const SizedBox(height: 5),
+            SizedBox(
+              child: Obx(() {
+                return Text(controller.message.value,
+                    overflow: TextOverflow.clip,
+                    maxLines: 30,
+                    style: const TextStyle(
+                        color: Palette.textRed,
+                        fontSize: 14,
+                        letterSpacing: -0.33));
+              }),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          Column(
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    child: const Text("취소",
+                        style: TextStyle(
+                            color: Palette.gray66,
+                            fontSize: 16,
+                            letterSpacing: -0.33)),
+                    onPressed: () {
+                      //amplitude
+                      Amplitude.getInstance().logEvent('BTN_CLK : CANCEL');
+                      Navigator.pop(context);
+                    },
+                  ),
+                  // TextButton(
+                  //   child: const Text("경고"),
+                  //   onPressed: () {
+                  //     controller.message.value = "경고입니다.";
+                  //   },
+                  // ),
+                  TextButton(
+                    child: const Text("확인",
+                        style: TextStyle(
+                            color: Palette.gray66,
+                            fontSize: 16,
+                            letterSpacing: -0.33)),
+                    onPressed: () {
+                      // 회원가입
+                      widget.authService.signUp(
+                        phoneNumber: phoneNumberControllerDialog.text,
+                        name: nameControllerDialog.text,
+                        isChecked: _isChecked,
+                        email: emailControllerDialog.text,
+                        password: passwordControllerDialog.text,
+                        confirmpassword: passwordControllerConfirmDialog.text,
+                        onSuccess: () {
+                          Navigator.pop(context);
+                          //amplitude
+                          Amplitude.getInstance()
+                              .logEvent('EVENT : 7FREE JOIN');
+                          // controller.message.value = "무료 체험 신청이 완료 되어었습니다.";
+
+                          // // 회원가입 성공
+                          // ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          //   content: Text("회원가입 성공"),
+                          // ));
+                        },
+                        onError: (err) {
+                          controller.message.value = err;
+                          // // 에러 발생
+                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //   content: Text(err),
+                          // ));
+                        },
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 20),
+            ],
           ),
         ],
       ),
-      actions: <Widget>[
-        TextButton(
-          child: const Text("확인"),
-          onPressed: () {
-            // 회원가입
-            widget.authService.signUp(
-              phoneNumber: phoneNumberControllerDialog.text,
-              name: nameControllerDialog.text,
-              isChecked: _isChecked,
-              email: emailControllerDialog.text,
-              password: passwordControllerDialog.text,
-              onSuccess: () {
-                Navigator.pop(context);
-
-                // 회원가입 성공
-                ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                  content: Text("회원가입 성공"),
-                ));
-              },
-              onError: (err) {
-                // 에러 발생
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(err),
-                ));
-              },
-            );
-          },
-        ),
-      ],
     );
   }
 }
@@ -788,3 +1093,81 @@ class NumberFormatter extends TextInputFormatter {
         selection: TextSelection.collapsed(offset: string.length));
   }
 }
+
+// void loginWithCurrentUser(FB.User? cUser, BuildContext context) {
+//   Future<List> resultFirstMemberList =
+//       memberService.readMemberListAtFirstTime(cUser!.uid);
+
+//   resultFirstMemberList.then((value) {
+//     print(
+//         "resultFirstMemberList then is called!! value.length : ${value.length}");
+//     globalVariables.resultList = [];
+//     globalVariables.resultList.addAll(value);
+//     /* for (int i = 0; i < value.length; i++) {
+//         print("value[${i}] : ${value[i]}");
+//       } */
+//   }).onError((error, stackTrace) {
+//     print("error : ${error}");
+//     print("stackTrace : \r\n${stackTrace}");
+//   }).whenComplete(() async {
+//     print("memberList await init complete!");
+
+//     Future<List> resultFirstActionList =
+//         actionService.readActionListAtFirstTime(cUser.uid);
+
+//     resultFirstActionList.then((value) {
+//       print(
+//           "3. resultFirstActionList then is called!! value.length : ${value.length}");
+//       globalVariables.actionList = [];
+//       globalVariables.actionList.addAll(value);
+//     }).onError((error, stackTrace) {
+//       print("error : ${error}");
+//       print("stackTrace : \r\n${stackTrace}");
+//     }).whenComplete(() async {
+//       print("actionList await init complete!");
+
+//       await ticketLibraryService.read(cUser.uid).then((value) {
+//         globalVariables.ticketLibraryList.addAll(value);
+//       }).onError((error, stackTrace) {
+//         print("error : ${error}");
+//         print("stackTrace : \r\n${stackTrace}");
+//       }).whenComplete(() async {
+//         print("ticketLibraryList await init complete!");
+
+//         await memberTicketService.read(cUser.uid).then((value) {
+//           globalVariables.memberTicketList.addAll(value);
+//         }).onError((error, stackTrace) {
+//           print("error : ${error}");
+//           print("stackTrace : \r\n${stackTrace}");
+//         }).whenComplete(() {
+//           print("memberTicketList await init complete!");
+//           // 로그인 성공
+//           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+//             content: Text("로그인 성공"),
+//           ));
+//           // 로그인 성공시 Home로 이동
+//           /*  Navigator.pushReplacement(
+//         context,
+//         MaterialPageRoute(builder: (_) => MemberList()),
+//         //MaterialPageRoute(builder: (_) => Mainpage()),
+//       ); */
+//           List<dynamic> args = [
+//             globalVariables.resultList,
+//             globalVariables.actionList
+//           ];
+//           Navigator.push(
+//             context,
+//             MaterialPageRoute(
+//               builder: (context) => MemberList(),
+//               // setting에서 arguments로 다음 화면에 회원 정보 넘기기
+//               settings: RouteSettings(arguments: args),
+//             ),
+//           );
+
+//           emailController.clear();
+//           passwordController.clear();
+//         });
+//       });
+//     });
+//   });
+// }

@@ -1,4 +1,5 @@
 import 'package:amplitude_flutter/amplitude.dart';
+import 'package:classmatch/main.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'color.dart';
@@ -47,6 +48,25 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text(
+                    '프로필 이름을 $talkName로 입장해주세요',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Palette.mainPoint,
+                          letterSpacing: -0.33,
+                        ),
+                  ),
+                  Text(
+                    '참여번호 : 2580',
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Palette.mainPoint,
+                          letterSpacing: -0.33,
+                        ),
+                  ),
+                  const SizedBox(height: 20),
                   Container(
                     margin: const EdgeInsets.only(left: 10, right: 10),
                     decoration: BoxDecoration(

@@ -1,15 +1,14 @@
+import 'package:amplitude_flutter/amplitude.dart';
 import 'package:classmatch/app/landing/landing_controller.dart';
 import 'package:classmatch/app/ui/color.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
-// ignore: depend_on_referenced_packages
-import 'package:intl/intl.dart';
-// ignore: depend_on_referenced_packages
-import 'package:intl/date_symbol_data_local.dart';
 
 import '../controller/auth_service.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 Color focusColor = Palette.buttonOrange;
 Color normalColor = Palette.gray66;
@@ -33,7 +32,7 @@ class _LandingPageState extends State<LandingPage> {
   FocusNode nameFocusNode = FocusNode();
   FocusNode phoneNumberFocusNode = FocusNode();
 
-  bool _isChecked = false;
+  final bool _isChecked = false;
 
   final GlobalKey directKey = GlobalKey();
 
@@ -41,29 +40,31 @@ class _LandingPageState extends State<LandingPage> {
   Widget build(BuildContext context) {
     return Consumer<LandingService>(
       builder: (context, landingService, child) {
+        //amplitude
+        Amplitude.getInstance().logEvent('PAGE_VIEW : LANDING');
         final authService = context.read<AuthService>();
         // Future<int> count = alramService.countMember();
 
-        if (initFlag == true) {
-          //자동 로그인
-          authService.signIn(
-            email: "demo@demo.com",
-            password: "123456",
-            onSuccess: () {
-              // 로그인 성공
-              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //   content: Text("로그인 성공"),
-              // ));
-            },
-            onError: (err) {
-              // // 에러 발생
-              // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              //   content: Text(err),
-              // ));
-            },
-          );
-          initFlag = false;
-        }
+        // if (initFlag == true) {
+        //   //자동 로그인
+        //   authService.signIn(
+        //     email: "demo@demo.com",
+        //     password: "123456",
+        //     onSuccess: () {
+        //       // 로그인 성공
+        //       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //       //   content: Text("로그인 성공"),
+        //       // ));
+        //     },
+        //     onError: (err) {
+        //       // // 에러 발생
+        //       // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //       //   content: Text(err),
+        //       // ));
+        //     },
+        //   );
+        //   initFlag = false;
+        // }
 
         return Scaffold(
           // appBar: AppBar(title: Text("로그인")),
@@ -85,204 +86,249 @@ class _LandingPageState extends State<LandingPage> {
                         // fit: BoxFit.cover,
                       ),
                       const SizedBox(height: 20),
-                      Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Palette.grayEE, width: 1),
-                          // borderRadius: BorderRadius.only(
-                          //   topRight: Radius.circular(10),
-                          //   topLeft: Radius.circular(10),
-                          //   bottomLeft: Radius.circular(10),
-                          //   bottomRight: Radius.circular(10),
-                          // ),
-                          //color: Palette.grayFF,
-                        ),
-                        height: 800,
-                        child: Column(children: [
-                          Container(
-                            height: 50,
+                      // Container(
+                      //   decoration: BoxDecoration(
+                      //     border: Border.all(color: Palette.grayEE, width: 1),
+                      //     // borderRadius: BorderRadius.only(
+                      //     //   topRight: Radius.circular(10),
+                      //     //   topLeft: Radius.circular(10),
+                      //     //   bottomLeft: Radius.circular(10),
+                      //     //   bottomRight: Radius.circular(10),
+                      //     // ),
+                      //     //color: Palette.grayFF,
+                      //   ),
+                      //   height: 800,
+                      //   child: Column(children: [
+                      //     Container(
+                      //       height: 50,
+                      //       width: 360,
+                      //       color: Palette.mainBackground,
+                      //       child: Center(
+                      //         child: Text(
+                      //           "대강알림",
+                      //           style: Theme.of(context)
+                      //               .textTheme
+                      //               .bodyLarge!
+                      //               .copyWith(
+                      //                 fontSize: 18.0,
+                      //                 fontWeight: FontWeight.bold,
+                      //                 color: Palette.gray00,
+                      //               ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //     const SizedBox(height: 10),
+                      //     // StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                      //     //   // stream: alarmService.read(user.uid),
+                      //     //   stream: FirebaseFirestore.instance
+                      //     //       .collection('inprogress2')
+                      //     //       .orderBy('startTime', descending: true)
+                      //     //       .limit(3)
+                      //     //       .snapshots(),
+                      //     //   builder: (context, snapshot) {
+                      //     //     // final controller =
+                      //     //     //     Get.find<AreaSelectController>();
+                      //     //     // final documents = snapshot.data?.docs ?? []; // 문서들 가져오기
+                      //     //     // final documents = snapshot.data; // 문서들 가져오기
+                      //     //     List<DocumentSnapshot> documents =
+                      //     //         snapshot.data?.docs ?? [];
+
+                      //     //     // List<DocumentSnapshot> documents = snapshot.data!.docs;
+                      //     //     if (snapshot.hasError) {
+                      //     //       return const Center(
+                      //     //           child: Text("회원 목록을 준비 중입니다."));
+                      //     //     } else if (snapshot.connectionState ==
+                      //     //         ConnectionState.waiting) {
+                      //     //       return const Center(
+                      //     //           child: Text("회원 목록을 준비 중입니다."));
+                      //     //     } else if (!snapshot.hasData) {
+                      //     //       return const Center(
+                      //     //           child: Text("회원 목록을 준비 중입니다."));
+                      //     //     }
+                      //     //     // if (documents.isEmpty) {
+                      //     //     //   return Center(child: Text("회원 목록을 준비 중입니다."));
+                      //     //     // }
+                      //     //     return SingleChildScrollView(
+                      //     //       // physics: const RangeMaintainingScrollPhysics(),
+                      //     //       child: Column(
+                      //     //         children: [
+                      //     //           // Image.asset(
+                      //     //           //   'assets/images/landing.png',
+                      //     //           //   width: 410,
+                      //     //           //   // height: 4000,
+                      //     //           //   fit: BoxFit.cover,
+                      //     //           // ),
+                      //     //           ListView.builder(
+                      //     //             shrinkWrap: true,
+                      //     //             physics:
+                      //     //                 const NeverScrollableScrollPhysics(),
+                      //     //             itemCount: documents.length,
+                      //     //             itemBuilder: (context, index) {
+                      //     //               final doc = documents[index];
+                      //     //               String area = doc.get('area');
+                      //     //               String status = doc.get('status');
+
+                      //     //               // 지역 필터링 된 것들만 출력 하도록 설정
+                      //     //               // if (areaFiltersflag) {
+                      //     //               String title = doc.get('title');
+                      //     //               String date = doc.get('date');
+                      //     //               String author = doc.get('author');
+                      //     //               String shop = doc.get('shop');
+                      //     //               String fee = doc.get('fee');
+                      //     //               // print(doc.get('content'));
+                      //     //               // print(doc.get('content').runtimeType);
+                      //     //               String content = doc.get('content');
+                      //     //               // String contentStr = jsonDecode(content).join(",");
+
+                      //     //               initializeDateFormatting();
+                      //     //               DateFormat dateFormat =
+                      //     //                   DateFormat('aa hh:mm', 'ko');
+                      //     //               DateFormat dateFormatGroup =
+                      //     //                   DateFormat('yyyy년 M월 d일 E요일', 'ko');
+
+                      //     //               String startTime = dateFormat
+                      //     //                   .format(doc
+                      //     //                       .get('startTime')
+                      //     //                       .toDate()
+                      //     //                       .toUtc())
+                      //     //                   .toString();
+                      //     //               String startTimeGroup = dateFormatGroup
+                      //     //                   .format(doc
+                      //     //                       .get('startTime')
+                      //     //                       .toDate()
+                      //     //                       .toUtc())
+                      //     //                   .toString();
+
+                      //     //               bool isSameDate = true;
+
+                      //     //               if (index == 0) {
+                      //     //                 isSameDate = false;
+                      //     //               } else {
+                      //     //                 String preStartTimeGroup =
+                      //     //                     dateFormatGroup
+                      //     //                         .format(documents[index - 1]
+                      //     //                             .get('startTime')
+                      //     //                             .toDate()
+                      //     //                             .toUtc())
+                      //     //                         .toString();
+                      //     //                 if (preStartTimeGroup !=
+                      //     //                     startTimeGroup) {
+                      //     //                   isSameDate = false;
+                      //     //                 }
+                      //     //               }
+
+                      //     //               if (index == 0 || !(isSameDate)) {
+                      //     //                 // 날짜와 같이 출력
+                      //     //                 return Column(
+                      //     //                   children: [
+                      //     //                     const SizedBox(
+                      //     //                       height: 15,
+                      //     //                     ),
+                      //     //                     Text(
+                      //     //                       startTimeGroup,
+                      //     //                       overflow: TextOverflow.clip,
+                      //     //                       maxLines: 1,
+                      //     //                       style: const TextStyle(
+                      //     //                           fontSize: 10,
+                      //     //                           color: Color(0xFF737373)),
+                      //     //                     ),
+                      //     //                     const SizedBox(
+                      //     //                       height: 31,
+                      //     //                     ),
+                      //     //                     MessageBubble(
+                      //     //                       title: title,
+                      //     //                       area: area,
+                      //     //                       date: date,
+                      //     //                       author: author,
+                      //     //                       shop: shop,
+                      //     //                       fee: fee,
+                      //     //                       startTime: startTime,
+                      //     //                       content: content,
+                      //     //                       status: status,
+                      //     //                     ),
+                      //     //                   ],
+                      //     //                 );
+                      //     //               } else {
+                      //     //                 // 메시지 버블만 출력
+                      //     //                 return MessageBubble(
+                      //     //                   title: title,
+                      //     //                   area: area,
+                      //     //                   date: date,
+                      //     //                   author: author,
+                      //     //                   shop: shop,
+                      //     //                   fee: fee,
+                      //     //                   startTime: startTime,
+                      //     //                   content: content,
+                      //     //                   status: status,
+                      //     //                 );
+                      //     //               }
+                      //     //             },
+                      //     //           ),
+                      //     //         ],
+                      //     //       ),
+                      //     //     );
+                      //     //   },
+                      //     // ),
+                      //   ]),
+                      // ),
+                      // InkWell(
+                      //   child: Image.asset(
+                      //     'assets/images/Landing_03.png',
+                      //     width: 360,
+                      //     // height: 4000,
+                      //     // fit: BoxFit.cover,
+                      //   ),
+                      //   onTap: () {
+                      //     Scrollable.ensureVisible(
+                      //       directKey.currentContext!,
+                      //       duration: const Duration(seconds: 1),
+                      //     );
+                      //   },
+                      // ),
+                      Offstage(
+                        offstage: finishFlag,
+                        child: InkWell(
+                          key: directKey,
+                          child: Image.asset(
+                            'assets/images/Landing_05.png',
                             width: 360,
-                            color: Palette.mainBackground,
-                            child: Center(
-                              child: Text(
-                                "대강알림",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                      fontSize: 18.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Palette.gray00,
-                                    ),
-                              ),
-                            ),
+                            // height: 4000,
+                            // fit: BoxFit.cover,
                           ),
-                          const SizedBox(height: 10),
-                          StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                            // stream: alarmService.read(user.uid),
-                            stream: FirebaseFirestore.instance
-                                .collection('inprogress2')
-                                .orderBy('startTime', descending: true)
-                                .limit(3)
-                                .snapshots(),
-                            builder: (context, snapshot) {
-                              // final controller =
-                              //     Get.find<AreaSelectController>();
-                              // final documents = snapshot.data?.docs ?? []; // 문서들 가져오기
-                              // final documents = snapshot.data; // 문서들 가져오기
-                              List<DocumentSnapshot> documents =
-                                  snapshot.data?.docs ?? [];
+                          onTap: () {
+                            Amplitude.getInstance()
+                                .logEvent('BTN_CLK : LAND_FREE');
+                            html.window.open(
+                                'https://open.kakao.com/o/gErOOU6e', 'new tab');
+                            // // 회원가입
+                            // landingService.create(
+                            //   name: nameController.text,
+                            //   email: emailController.text,
+                            //   phoneNumber: phoneNumberController.text,
+                            //   isChecked: _isChecked,
+                            //   onSuccess: () {
+                            //     nameController.clear();
+                            //     emailController.clear();
+                            //     phoneNumberController.clear();
 
-                              // List<DocumentSnapshot> documents = snapshot.data!.docs;
-                              if (snapshot.hasError) {
-                                return const Center(
-                                    child: Text("회원 목록을 준비 중입니다."));
-                              } else if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const Center(
-                                    child: Text("회원 목록을 준비 중입니다."));
-                              } else if (!snapshot.hasData) {
-                                return const Center(
-                                    child: Text("회원 목록을 준비 중입니다."));
-                              }
-                              // if (documents.isEmpty) {
-                              //   return Center(child: Text("회원 목록을 준비 중입니다."));
-                              // }
-                              return SingleChildScrollView(
-                                // physics: const RangeMaintainingScrollPhysics(),
-                                child: Column(
-                                  children: [
-                                    // Image.asset(
-                                    //   'assets/images/landing.png',
-                                    //   width: 410,
-                                    //   // height: 4000,
-                                    //   fit: BoxFit.cover,
-                                    // ),
-                                    ListView.builder(
-                                      shrinkWrap: true,
-                                      physics:
-                                          const NeverScrollableScrollPhysics(),
-                                      itemCount: documents.length,
-                                      itemBuilder: (context, index) {
-                                        final doc = documents[index];
-                                        String area = doc.get('area');
-                                        String status = doc.get('status');
+                            //     flutterDialog(
+                            //         context, "무료 체험 신청이 완료되었습니다");
 
-                                        // 지역 필터링 된 것들만 출력 하도록 설정
-                                        // if (areaFiltersflag) {
-                                        String title = doc.get('title');
-                                        String date = doc.get('date');
-                                        String author = doc.get('author');
-                                        String shop = doc.get('shop');
-                                        String fee = doc.get('fee');
-                                        // print(doc.get('content'));
-                                        // print(doc.get('content').runtimeType);
-                                        String content = doc.get('content');
-                                        // String contentStr = jsonDecode(content).join(",");
-
-                                        initializeDateFormatting();
-                                        DateFormat dateFormat =
-                                            DateFormat('aa hh:mm', 'ko');
-                                        DateFormat dateFormatGroup =
-                                            DateFormat('yyyy년 M월 d일 E요일', 'ko');
-
-                                        String startTime = dateFormat
-                                            .format(doc
-                                                .get('startTime')
-                                                .toDate()
-                                                .toUtc())
-                                            .toString();
-                                        String startTimeGroup = dateFormatGroup
-                                            .format(doc
-                                                .get('startTime')
-                                                .toDate()
-                                                .toUtc())
-                                            .toString();
-
-                                        bool isSameDate = true;
-
-                                        if (index == 0) {
-                                          isSameDate = false;
-                                        } else {
-                                          String preStartTimeGroup =
-                                              dateFormatGroup
-                                                  .format(documents[index - 1]
-                                                      .get('startTime')
-                                                      .toDate()
-                                                      .toUtc())
-                                                  .toString();
-                                          if (preStartTimeGroup !=
-                                              startTimeGroup) {
-                                            isSameDate = false;
-                                          }
-                                        }
-
-                                        if (index == 0 || !(isSameDate)) {
-                                          // 날짜와 같이 출력
-                                          return Column(
-                                            children: [
-                                              const SizedBox(
-                                                height: 15,
-                                              ),
-                                              Text(
-                                                startTimeGroup,
-                                                overflow: TextOverflow.clip,
-                                                maxLines: 1,
-                                                style: const TextStyle(
-                                                    fontSize: 10,
-                                                    color: Color(0xFF737373)),
-                                              ),
-                                              const SizedBox(
-                                                height: 31,
-                                              ),
-                                              MessageBubble(
-                                                title: title,
-                                                area: area,
-                                                date: date,
-                                                author: author,
-                                                shop: shop,
-                                                fee: fee,
-                                                startTime: startTime,
-                                                content: content,
-                                                status: status,
-                                              ),
-                                            ],
-                                          );
-                                        } else {
-                                          // 메시지 버블만 출력
-                                          return MessageBubble(
-                                            title: title,
-                                            area: area,
-                                            date: date,
-                                            author: author,
-                                            shop: shop,
-                                            fee: fee,
-                                            startTime: startTime,
-                                            content: content,
-                                            status: status,
-                                          );
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              );
-                            },
-                          ),
-                        ]),
-                      ),
-                      InkWell(
-                        child: Image.asset(
-                          'assets/images/Landing_03.png',
-                          width: 360,
-                          // height: 4000,
-                          // fit: BoxFit.cover,
+                            //     // // 회원가입 성공
+                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                            //     // ));
+                            //   },
+                            //   onError: (err) {
+                            //     flutterDialog(context, err);
+                            //     // // 에러 발생
+                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //     //   content: Text(err),
+                            //     // ));
+                            //   },
+                            // );
+                          },
                         ),
-                        onTap: () {
-                          Scrollable.ensureVisible(
-                            directKey.currentContext!,
-                            duration: const Duration(seconds: 1),
-                          );
-                        },
                       ),
                       Image.asset(
                         'assets/images/Landing_04.png',
@@ -291,392 +337,400 @@ class _LandingPageState extends State<LandingPage> {
                         // fit: BoxFit.cover,
                       ),
 
-                      SizedBox(
-                        width: 250,
-                        child: Column(children: [
-                          const SizedBox(
-                            height: 20,
-                          ),
-                          TextField(
-                            controller: nameController,
-                            // obscureText: false, // 비밀번호 안보이게
-                            style: TextStyle(color: normalColor),
-                            decoration: InputDecoration(
-                              labelText: "이름",
-                              labelStyle: TextStyle(
-                                  color: nameFocusNode.hasFocus
-                                      ? focusColor
-                                      : normalColor),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Palette.gray33, width: 0),
-                              ),
-                              focusColor: focusColor,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: focusColor,
-                                ),
-                              ),
-                            ),
-                          ),
+                      // SizedBox(
+                      //   width: 250,
+                      //   child: Column(children: [
+                      //     const SizedBox(
+                      //       height: 20,
+                      //     ),
+                      //     TextField(
+                      //       controller: nameController,
+                      //       // obscureText: false, // 비밀번호 안보이게
+                      //       style: TextStyle(color: normalColor),
+                      //       decoration: InputDecoration(
+                      //         labelText: "이름",
+                      //         labelStyle: TextStyle(
+                      //             color: nameFocusNode.hasFocus
+                      //                 ? focusColor
+                      //                 : normalColor),
+                      //         enabledBorder: const UnderlineInputBorder(
+                      //           borderSide:
+                      //               BorderSide(color: Palette.gray33, width: 0),
+                      //         ),
+                      //         focusColor: focusColor,
+                      //         focusedBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(
+                      //             color: focusColor,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
 
-                          /// 이메일
-                          TextField(
-                            controller: emailController,
-                            style: TextStyle(color: normalColor),
-                            decoration: InputDecoration(
-                              labelText: "이메일",
-                              labelStyle: TextStyle(
-                                  color: emailFocusNode.hasFocus
-                                      ? focusColor
-                                      : normalColor),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Palette.gray33, width: 0),
-                              ),
-                              focusColor: focusColor,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: focusColor,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
+                      //     /// 이메일
+                      //     TextField(
+                      //       controller: emailController,
+                      //       style: TextStyle(color: normalColor),
+                      //       decoration: InputDecoration(
+                      //         labelText: "이메일",
+                      //         labelStyle: TextStyle(
+                      //             color: emailFocusNode.hasFocus
+                      //                 ? focusColor
+                      //                 : normalColor),
+                      //         enabledBorder: const UnderlineInputBorder(
+                      //           borderSide:
+                      //               BorderSide(color: Palette.gray33, width: 0),
+                      //         ),
+                      //         focusColor: focusColor,
+                      //         focusedBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(
+                      //             color: focusColor,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       keyboardType: TextInputType.emailAddress,
+                      //     ),
 
-                          /// 전화번호
-                          TextField(
-                            controller: phoneNumberController,
-                            // obscureText: false, // 비밀번호 안보이게
+                      //     /// 전화번호
+                      //     TextField(
+                      //       controller: phoneNumberController,
+                      //       // obscureText: false, // 비밀번호 안보이게
 
-                            style: TextStyle(color: normalColor),
-                            decoration: InputDecoration(
-                              labelText: "휴대폰번호",
-                              labelStyle: TextStyle(
-                                  color: phoneNumberFocusNode.hasFocus
-                                      ? focusColor
-                                      : normalColor),
-                              enabledBorder: const UnderlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Palette.gray33, width: 0),
-                              ),
-                              focusColor: focusColor,
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: focusColor,
-                                ),
-                              ),
-                            ),
-                            keyboardType: TextInputType.number,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly, //숫자만!
-                              NumberFormatter(), // 자동하이픈
-                              LengthLimitingTextInputFormatter(
-                                  13) //13자리만 입력받도록 하이픈 2개+숫자 11개
-                            ],
-                            // inputFormatters: [
-                            //   FilteringTextInputFormatter.allow(RegExp('[0-9]'))
-                            // ],
-                          ),
+                      //       style: TextStyle(color: normalColor),
+                      //       decoration: InputDecoration(
+                      //         labelText: "휴대폰번호",
+                      //         labelStyle: TextStyle(
+                      //             color: phoneNumberFocusNode.hasFocus
+                      //                 ? focusColor
+                      //                 : normalColor),
+                      //         enabledBorder: const UnderlineInputBorder(
+                      //           borderSide:
+                      //               BorderSide(color: Palette.gray33, width: 0),
+                      //         ),
+                      //         focusColor: focusColor,
+                      //         focusedBorder: UnderlineInputBorder(
+                      //           borderSide: BorderSide(
+                      //             color: focusColor,
+                      //           ),
+                      //         ),
+                      //       ),
+                      //       keyboardType: TextInputType.number,
+                      //       inputFormatters: [
+                      //         FilteringTextInputFormatter.digitsOnly, //숫자만!
+                      //         NumberFormatter(), // 자동하이픈
+                      //         LengthLimitingTextInputFormatter(
+                      //             13) //13자리만 입력받도록 하이픈 2개+숫자 11개
+                      //       ],
+                      //       // inputFormatters: [
+                      //       //   FilteringTextInputFormatter.allow(RegExp('[0-9]'))
+                      //       // ],
+                      //     ),
 
-                          const SizedBox(height: 10),
-                          const Text("개인정보 수집 및 활용에 동의하십니까?"),
-                          const SizedBox(height: 10),
+                      //     const SizedBox(height: 10),
+                      //     const Text("개인정보 수집 및 활용에 동의하십니까?"),
+                      //     const SizedBox(height: 10),
 
-                          SizedBox(
-                            width: 200,
-                            child: Row(
-                              children: [
-                                const SizedBox(width: 10),
-                                Checkbox(
-                                    value: _isChecked,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        _isChecked = value!;
-                                      });
-                                    }),
-                                const Text("네"),
-                              ],
-                            ),
-                          ),
+                      //     SizedBox(
+                      //       width: 200,
+                      //       child: Row(
+                      //         children: [
+                      //           const SizedBox(width: 10),
+                      //           Checkbox(
+                      //               value: _isChecked,
+                      //               onChanged: (value) {
+                      //                 setState(() {
+                      //                   _isChecked = value!;
+                      //                 });
+                      //               }),
+                      //           const Text("네"),
+                      //         ],
+                      //       ),
+                      //     ),
 
-                          const SizedBox(height: 20),
-                        ]),
-                      ),
-                      SizedBox(
-                        key: directKey,
-                        width: 360,
-                        child:
-                            StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                          // stream: alarmService.read(user.uid),
-                          stream: FirebaseFirestore.instance
-                              .collection('email')
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            List<DocumentSnapshot> documents =
-                                snapshot.data?.docs ?? [];
-                            // List<DocumentSnapshot> documents = snapshot.data!.docs;
-                            if (snapshot.hasError) {
-                              return const Center(child: Text("-"));
-                            } else if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(child: Text("-"));
-                            } else if (!snapshot.hasData) {
-                              return const Center(child: Text("-"));
-                            }
-                            int count = 30 - documents.length;
-                            if (count < 0) {
-                              count = 0;
-                              finishFlag = true;
-                            }
-                            return Column(
-                              children: [
-                                Text("남은자리 : ${count.toString()}",
-                                    style: const TextStyle(fontSize: 20)),
-                                const SizedBox(
-                                  height: 20,
-                                ),
-                                Offstage(
-                                  offstage: finishFlag,
-                                  child: InkWell(
-                                    child: Image.asset(
-                                      'assets/images/Landing_05.png',
-                                      width: 360,
-                                      // height: 4000,
-                                      // fit: BoxFit.cover,
-                                    ),
-                                    onTap: () {
-                                      // 회원가입
-                                      landingService.create(
-                                        name: nameController.text,
-                                        email: emailController.text,
-                                        phoneNumber: phoneNumberController.text,
-                                        isChecked: _isChecked,
-                                        onSuccess: () {
-                                          nameController.clear();
-                                          emailController.clear();
-                                          phoneNumberController.clear();
+                      //     const SizedBox(height: 20),
+                      //   ]),
+                      // ),
 
-                                          flutterDialog(
-                                              context, "무료 체험 신청이 완료되었습니다");
+                      // SizedBox(
+                      //   key: directKey,
+                      //   width: 360,
+                      //   child: FutureBuilder<int>(
+                      //     // stream: alarmService.read(user.uid),
+                      //     future: authService.getTalkNameLastNumber(),
+                      //     builder: (context, snapshot) {
+                      //       // snapshot.get();
+                      //       print(snapshot.data);
+                      //       // int num = snapshot.map((e) => e.toString());
+                      //       // .map((e) => e.toString())
 
-                                          // // 회원가입 성공
-                                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          //   content: Text("무료 체험 신청이 완료되었습니다"),
-                                          // ));
-                                        },
-                                        onError: (err) {
-                                          flutterDialog(context, err);
-                                          // // 에러 발생
-                                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          //   content: Text(err),
-                                          // ));
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  // ElevatedButton(
-                                  //   child: Padding(
-                                  //     padding: const EdgeInsets.all(14.0),
-                                  //     child: Container(
-                                  //       width: 200,
-                                  //       child: Center(
-                                  //         child: Text("대기 알림 받기",
-                                  //             style: TextStyle(fontSize: 24)),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  //   style: ElevatedButton.styleFrom(
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius:
-                                  //           BorderRadius.circular(30),
-                                  //     ),
-                                  //     padding: EdgeInsets.all(0),
-                                  //     elevation: 0,
-                                  //     backgroundColor: Palette.buttonOrange,
-                                  //   ),
-                                  //   onPressed: () {
-                                  //     // null;
-                                  //     // 회원가입
-                                  //     alramService.create(
-                                  //       name: nameController.text,
-                                  //       email: emailController.text,
-                                  //       phoneNumber:
-                                  //           phoneNumberController.text,
-                                  //       isChecked: _isChecked,
-                                  //       onSuccess: () {
-                                  //         nameController.clear();
-                                  //         emailController.clear();
-                                  //         phoneNumberController.clear();
+                      //       // int num = snapshot.data?.get('talkNameNum');
+                      //       // List<DocumentSnapshot> documents =
+                      //       //     snapshot.data?.docs ?? [];
+                      //       // // List<DocumentSnapshot> documents = snapshot.data!.docs;
+                      //       // if (snapshot.hasError) {
+                      //       //   return const Center(child: Text("-"));
+                      //       // } else if (snapshot.connectionState ==
+                      //       //     ConnectionState.waiting) {
+                      //       //   return const Center(child: Text("-"));
+                      //       // } else if (!snapshot.hasData) {
+                      //       //   return const Center(child: Text("-"));
+                      //       // }
+                      //       // int count = 30 - documents.length;
+                      //       // if (count < 0) {
+                      //       //   count = 0;
+                      //       //   finishFlag = true;
+                      //       // }
+                      //       return Column(
+                      //         children: [
+                      //           const SizedBox(height: 20),
+                      //           // Text("남은자리 : ${count.toString()}",
+                      //           Text("남은자리 : ",
+                      //               style: const TextStyle(fontSize: 20)),
+                      //           const SizedBox(
+                      //             height: 20,
+                      //           ),
+                      //           Offstage(
+                      //             offstage: finishFlag,
+                      //             child: InkWell(
+                      //               child: Image.asset(
+                      //                 'assets/images/Landing_05.png',
+                      //                 width: 360,
+                      //                 // height: 4000,
+                      //                 // fit: BoxFit.cover,
+                      //               ),
+                      //               onTap: () {
+                      //                 Amplitude.getInstance()
+                      //                     .logEvent('BTN_CLK : LAND_FREE');
+                      //                 html.window.open(
+                      //                     'https://open.kakao.com/o/gErOOU6e',
+                      //                     'new tab');
+                      //                 // // 회원가입
+                      //                 // landingService.create(
+                      //                 //   name: nameController.text,
+                      //                 //   email: emailController.text,
+                      //                 //   phoneNumber: phoneNumberController.text,
+                      //                 //   isChecked: _isChecked,
+                      //                 //   onSuccess: () {
+                      //                 //     nameController.clear();
+                      //                 //     emailController.clear();
+                      //                 //     phoneNumberController.clear();
 
-                                  //         FlutterDialog(
-                                  //             context, "대기알림 신청 완료되었습니다");
+                      //                 //     flutterDialog(
+                      //                 //         context, "무료 체험 신청이 완료되었습니다");
 
-                                  //         // // 회원가입 성공
-                                  //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  //         //   content: Text("무료 체험 신청이 완료되었습니다"),
-                                  //         // ));
-                                  //       },
-                                  //       onError: (err) {
-                                  //         FlutterDialog(context, err);
-                                  //         // // 에러 발생
-                                  //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  //         //   content: Text(err),
-                                  //         // ));
-                                  //       },
-                                  //     );
-                                  //   },
-                                  // ),
-                                ),
-                                Offstage(
-                                  offstage: !finishFlag,
-                                  child: InkWell(
-                                    child: Image.asset(
-                                      'assets/images/Landing_07.png',
-                                      width: 360,
-                                      // height: 4000,
-                                      // fit: BoxFit.cover,
-                                    ),
-                                    onTap: () {
-                                      // 회원가입
-                                      landingService.create(
-                                        name: nameController.text,
-                                        email: emailController.text,
-                                        phoneNumber: phoneNumberController.text,
-                                        isChecked: _isChecked,
-                                        onSuccess: () {
-                                          nameController.clear();
-                                          emailController.clear();
-                                          phoneNumberController.clear();
+                      //                 //     // // 회원가입 성공
+                      //                 //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //                 //     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                      //                 //     // ));
+                      //                 //   },
+                      //                 //   onError: (err) {
+                      //                 //     flutterDialog(context, err);
+                      //                 //     // // 에러 발생
+                      //                 //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //                 //     //   content: Text(err),
+                      //                 //     // ));
+                      //                 //   },
+                      //                 // );
+                      //               },
+                      //             ),
+                      //             // ElevatedButton(
+                      //             //   child: Padding(
+                      //             //     padding: const EdgeInsets.all(14.0),
+                      //             //     child: Container(
+                      //             //       width: 200,
+                      //             //       child: Center(
+                      //             //         child: Text("대기 알림 받기",
+                      //             //             style: TextStyle(fontSize: 24)),
+                      //             //       ),
+                      //             //     ),
+                      //             //   ),
+                      //             //   style: ElevatedButton.styleFrom(
+                      //             //     shape: RoundedRectangleBorder(
+                      //             //       borderRadius:
+                      //             //           BorderRadius.circular(30),
+                      //             //     ),
+                      //             //     padding: EdgeInsets.all(0),
+                      //             //     elevation: 0,
+                      //             //     backgroundColor: Palette.buttonOrange,
+                      //             //   ),
+                      //             //   onPressed: () {
+                      //             //     // null;
+                      //             //     // 회원가입
+                      //             //     alramService.create(
+                      //             //       name: nameController.text,
+                      //             //       email: emailController.text,
+                      //             //       phoneNumber:
+                      //             //           phoneNumberController.text,
+                      //             //       isChecked: _isChecked,
+                      //             //       onSuccess: () {
+                      //             //         nameController.clear();
+                      //             //         emailController.clear();
+                      //             //         phoneNumberController.clear();
 
-                                          flutterDialog(
-                                              context, "대기알림 신청 완료되었습니다");
+                      //             //         FlutterDialog(
+                      //             //             context, "대기알림 신청 완료되었습니다");
 
-                                          // // 회원가입 성공
-                                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          //   content: Text("무료 체험 신청이 완료되었습니다"),
-                                          // ));
-                                        },
-                                        onError: (err) {
-                                          flutterDialog(context, err);
-                                          // // 에러 발생
-                                          // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                          //   content: Text(err),
-                                          // ));
-                                        },
-                                      );
-                                    },
-                                  ),
-                                  // ElevatedButton(
-                                  //   child: Padding(
-                                  //     padding: const EdgeInsets.all(14.0),
-                                  //     child: Container(
-                                  //       width: 200,
-                                  //       child: Center(
-                                  //         child: Text("무료 체험 신청",
-                                  //             style: TextStyle(fontSize: 24)),
-                                  //       ),
-                                  //     ),
-                                  //   ),
-                                  //   style: ElevatedButton.styleFrom(
-                                  //     shape: RoundedRectangleBorder(
-                                  //       borderRadius:
-                                  //           BorderRadius.circular(30),
-                                  //     ),
-                                  //     padding: EdgeInsets.all(0),
-                                  //     elevation: 0,
-                                  //     backgroundColor: Palette.buttonOrange,
-                                  //   ),
-                                  //   onPressed: () {
-                                  //     // null;
-                                  //     // 회원가입
-                                  //     alramService.create(
-                                  //       name: nameController.text,
-                                  //       email: emailController.text,
-                                  //       phoneNumber:
-                                  //           phoneNumberController.text,
-                                  //       isChecked: _isChecked,
-                                  //       onSuccess: () {
-                                  //         nameController.clear();
-                                  //         emailController.clear();
-                                  //         phoneNumberController.clear();
+                      //             //         // // 회원가입 성공
+                      //             //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //             //         //   content: Text("무료 체험 신청이 완료되었습니다"),
+                      //             //         // ));
+                      //             //       },
+                      //             //       onError: (err) {
+                      //             //         FlutterDialog(context, err);
+                      //             //         // // 에러 발생
+                      //             //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //             //         //   content: Text(err),
+                      //             //         // ));
+                      //             //       },
+                      //             //     );
+                      //             //   },
+                      //             // ),
+                      //           ),
+                      //           Offstage(
+                      //             offstage: !finishFlag,
+                      //             child: InkWell(
+                      //               child: Image.asset(
+                      //                 'assets/images/Landing_07.png',
+                      //                 width: 360,
+                      //                 // height: 4000,
+                      //                 // fit: BoxFit.cover,
+                      //               ),
+                      //               onTap: () {
+                      //                 // 회원가입
+                      //                 landingService.create(
+                      //                   name: nameController.text,
+                      //                   email: emailController.text,
+                      //                   phoneNumber: phoneNumberController.text,
+                      //                   isChecked: _isChecked,
+                      //                   onSuccess: () {
+                      //                     nameController.clear();
+                      //                     emailController.clear();
+                      //                     phoneNumberController.clear();
 
-                                  //         FlutterDialog(
-                                  //             context, "무료 체험 신청이 완료되었습니다");
+                      //                     flutterDialog(
+                      //                         context, "대기알림 신청 완료되었습니다");
 
-                                  //         // // 회원가입 성공
-                                  //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  //         //   content: Text("무료 체험 신청이 완료되었습니다"),
-                                  //         // ));
-                                  //       },
-                                  //       onError: (err) {
-                                  //         FlutterDialog(context, err);
-                                  //         // // 에러 발생
-                                  //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                  //         //   content: Text(err),
-                                  //         // ));
-                                  //       },
-                                  //     );
-                                  //   },
-                                  // ),
-                                ),
-                                const SizedBox(height: 10),
-                              ],
-                            );
-                          },
-                        ),
-                      ),
+                      //                     // // 회원가입 성공
+                      //                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //                     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                      //                     // ));
+                      //                   },
+                      //                   onError: (err) {
+                      //                     flutterDialog(context, err);
+                      //                     // // 에러 발생
+                      //                     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //                     //   content: Text(err),
+                      //                     // ));
+                      //                   },
+                      //                 );
+                      //               },
+                      //             ),
+                      //             // ElevatedButton(
+                      //             //   child: Padding(
+                      //             //     padding: const EdgeInsets.all(14.0),
+                      //             //     child: Container(
+                      //             //       width: 200,
+                      //             //       child: Center(
+                      //             //         child: Text("무료 체험 신청",
+                      //             //             style: TextStyle(fontSize: 24)),
+                      //             //       ),
+                      //             //     ),
+                      //             //   ),
+                      //             //   style: ElevatedButton.styleFrom(
+                      //             //     shape: RoundedRectangleBorder(
+                      //             //       borderRadius:
+                      //             //           BorderRadius.circular(30),
+                      //             //     ),
+                      //             //     padding: EdgeInsets.all(0),
+                      //             //     elevation: 0,
+                      //             //     backgroundColor: Palette.buttonOrange,
+                      //             //   ),
+                      //             //   onPressed: () {
+                      //             //     // null;
+                      //             //     // 회원가입
+                      //             //     alramService.create(
+                      //             //       name: nameController.text,
+                      //             //       email: emailController.text,
+                      //             //       phoneNumber:
+                      //             //           phoneNumberController.text,
+                      //             //       isChecked: _isChecked,
+                      //             //       onSuccess: () {
+                      //             //         nameController.clear();
+                      //             //         emailController.clear();
+                      //             //         phoneNumberController.clear();
+
+                      //             //         FlutterDialog(
+                      //             //             context, "무료 체험 신청이 완료되었습니다");
+
+                      //             //         // // 회원가입 성공
+                      //             //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //             //         //   content: Text("무료 체험 신청이 완료되었습니다"),
+                      //             //         // ));
+                      //             //       },
+                      //             //       onError: (err) {
+                      //             //         FlutterDialog(context, err);
+                      //             //         // // 에러 발생
+                      //             //         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      //             //         //   content: Text(err),
+                      //             //         // ));
+                      //             //       },
+                      //             //     );
+                      //             //   },
+                      //             // ),
+                      //           ),
+                      //           const SizedBox(height: 10),
+                      //         ],
+                      //       );
+                      //     },
+                      //   ),
+                      // ),
 
                       /// 이름
 
-                      // /// 회원가입 버튼
-                      // ElevatedButton(
-                      //     child: Text("카카오 로그인", style: TextStyle(fontSize: 21)),
-                      //     onPressed: () async {
-                      //       if (await isKakaoTalkInstalled()) {
-                      //         try {
-                      //           await UserApi.instance.loginWithKakaoTalk();
-                      //           print('카카오톡으로 로그인 성공');
-                      //           _get_user_info();
-                      //           // HomePage로 이동
-                      //           Navigator.pushReplacement(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (context) => ArlamList()),
-                      //           );
-                      //         } catch (error) {
-                      //           print('카카오톡으로 로그인 실패 $error');
-                      //           // 카카오톡에 연결된 카카오계정이 없는 경우, 카카오계정으로 로그인
-                      //           try {
-                      //             await UserApi.instance.loginWithKakaoAccount();
-                      //             print('카카오계정으로 로그인 성공');
-                      //             _get_user_info();
-                      //             // HomePage로 이동
-                      //             Navigator.pushReplacement(
-                      //               context,
-                      //               MaterialPageRoute(
-                      //                   builder: (context) => ArlamList()),
-                      //             );
-                      //           } catch (error) {
-                      //             print('카카오계정으로 로그인 실패 $error');
-                      //           }
-                      //         }
-                      //       } else {
-                      //         try {
-                      //           await UserApi.instance.loginWithKakaoAccount();
-                      //           print('카카오계정으로 로그인 성공');
-                      //           _get_user_info();
-                      //           // HomePage로 이동
-                      //           Navigator.pushReplacement(
-                      //             context,
-                      //             MaterialPageRoute(
-                      //                 builder: (context) => ArlamListOld()),
-                      //           );
-                      //         } catch (error) {
-                      //           print('카카오계정으로 로그인 실패 $error');
-                      //         }
-                      //       }
-                      //     }),
+                      Offstage(
+                        offstage: finishFlag,
+                        child: InkWell(
+                          key: directKey,
+                          child: Image.asset(
+                            'assets/images/Landing_05.png',
+                            width: 360,
+                            // height: 4000,
+                            // fit: BoxFit.cover,
+                          ),
+                          onTap: () {
+                            Amplitude.getInstance()
+                                .logEvent('BTN_CLK : LAND_FREE');
+                            html.window.open(
+                                'https://open.kakao.com/o/gErOOU6e', 'new tab');
+                            // // 회원가입
+                            // landingService.create(
+                            //   name: nameController.text,
+                            //   email: emailController.text,
+                            //   phoneNumber: phoneNumberController.text,
+                            //   isChecked: _isChecked,
+                            //   onSuccess: () {
+                            //     nameController.clear();
+                            //     emailController.clear();
+                            //     phoneNumberController.clear();
+
+                            //     flutterDialog(
+                            //         context, "무료 체험 신청이 완료되었습니다");
+
+                            //     // // 회원가입 성공
+                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                            //     // ));
+                            //   },
+                            //   onError: (err) {
+                            //     flutterDialog(context, err);
+                            //     // // 에러 발생
+                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //     //   content: Text(err),
+                            //     // ));
+                            //   },
+                            // );
+                          },
+                        ),
+                      ),
                     ],
                   ),
                 ),

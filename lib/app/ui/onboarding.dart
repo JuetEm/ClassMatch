@@ -8,6 +8,8 @@ import 'package:introduction_screen/introduction_screen.dart';
 import 'package:provider/provider.dart';
 
 import '../controller/alarm_service.dart';
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
 
 class OnboardingPage extends StatefulWidget {
   const OnboardingPage({Key? key}) : super(key: key);
@@ -17,6 +19,27 @@ class OnboardingPage extends StatefulWidget {
 }
 
 class _OnboardingPageState extends State<OnboardingPage> {
+  @override
+  void initState() {
+    final alarmService = context.read<AlarmService>();
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+    // 프로필 아이디
+    final talkNameFromSever = alarmService.findtalkName(user!.uid);
+    talkNameFromSever.then((val) {
+      // int가 나오면 해당 값을 출력
+      debugPrint('처음서버값: $val');
+      //해당 함수는 빌드가 끝난 다음 수행 된다.
+      //https://velog.io/@jun7332568/%ED%94%8C%EB%9F%AC%ED%84%B0flutter-setState-or-markNeedsBuild-called-during-build.-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
+      // WidgetsBinding.instance!.addPostFrameCallback((_) {
+      talkName = val;
+    }).catchError((error) {
+      // error가 해당 에러를 출력
+      debugPrint('error: $error');
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final authService = context.read<AuthService>();
@@ -44,6 +67,218 @@ class _OnboardingPageState extends State<OnboardingPage> {
         //   activeColor: Palette.gray66,
         // ),
         pages: [
+          // 0번째 페이지
+          PageViewModel(
+            titleWidget: const SizedBox(height: 1),
+            bodyWidget: Column(
+              children: [
+                Image.asset(
+                  'assets/images/onboarding0.png',
+                  width: 340,
+                ),
+                const SizedBox(height: 20),
+                Text(
+                  '프로필 이름을 $talkName로 입장해주세요',
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Palette.mainPoint,
+                        letterSpacing: -0.33,
+                      ),
+                ),
+                Text(
+                  '참여번호 : 2580',
+                  style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: Palette.mainPoint,
+                        letterSpacing: -0.33,
+                      ),
+                ),
+                const SizedBox(height: 20),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Palette.grayB4, width: 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  width: 250,
+                  height: 50,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      //amplitude
+                      Amplitude.getInstance().logEvent('BTN_CLK : OPNCHAT_ENT',
+                          eventProperties: {"AREA": "서울"});
+                      html.window
+                          .open('https://open.kakao.com/o/g7mDXV5e', 'new tab');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "서울 대강 알림 오픈채팅방",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Palette.gray66,
+                            letterSpacing: -0.33,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.arrow_circle_right,
+                          color: Palette.gray66,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Palette.grayB4, width: 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  width: 250,
+                  height: 50,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      //amplitude
+                      Amplitude.getInstance().logEvent('BTN_CLK : OPNCHAT_ENT',
+                          eventProperties: {"AREA": "경기"});
+
+                      html.window
+                          .open('https://open.kakao.com/o/gMXiLn6e', 'new tab');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "경기 대강 알림 오픈채팅방",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Palette.gray66,
+                            letterSpacing: -0.33,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.arrow_circle_right,
+                          color: Palette.gray66,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Palette.grayB4, width: 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  width: 250,
+                  height: 50,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      //amplitude
+                      Amplitude.getInstance().logEvent('BTN_CLK : OPNCHAT_ENT',
+                          eventProperties: {"AREA": "인천"});
+                      html.window
+                          .open('https://open.kakao.com/o/ggS2Op6e', 'new tab');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "인천 대강 알림 오픈채팅방",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Palette.gray66,
+                            letterSpacing: -0.33,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.arrow_circle_right,
+                          color: Palette.gray66,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 10, right: 10),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Palette.grayB4, width: 1),
+                      borderRadius: BorderRadius.circular(10)),
+                  width: 250,
+                  height: 50,
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    onTap: () {
+                      //amplitude
+                      Amplitude.getInstance().logEvent('BTN_CLK : OPNCHAT_ENT',
+                          eventProperties: {"AREA": "기타"});
+                      html.window
+                          .open('https://open.kakao.com/o/g2vOPp6e', 'new tab');
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "기타 대강 알림 오픈채팅방",
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Palette.gray66,
+                            letterSpacing: -0.33,
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Icon(
+                          Icons.arrow_circle_right,
+                          color: Palette.gray66,
+                          size: 22,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            decoration: const PageDecoration(
+              titlePadding: EdgeInsets.all(0),
+              contentMargin: EdgeInsets.all(0),
+              bodyFlex: 100,
+              // imageFlex: 10,
+              // imageAlignment: Alignment.topCenter,
+              bodyAlignment: Alignment.topCenter,
+              fullScreen: true,
+              titleTextStyle: TextStyle(
+                color: Palette.mainPoint,
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+              ),
+              bodyTextStyle: TextStyle(
+                color: Colors.black,
+                fontSize: 18,
+              ),
+            ),
+          ),
           // 첫번째 페이지
           PageViewModel(
             titleWidget: const SizedBox(height: 1),

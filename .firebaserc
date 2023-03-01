@@ -1,0 +1,18 @@
+{
+  "projects": {
+    "default": "classmatch-f7175",
+    "staging": "classmatch-f7175",
+    "classmatch": "classmatch-f7175",
+    "land": "classmatchland"
+  },
+  "targets": {
+    "classmatch-f7175": {
+      "hosting": {
+        "app": [
+          "app.classmatch.co.kr"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}

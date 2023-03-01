@@ -1,13 +1,42 @@
+// ignore: file_names
 import 'package:amplitude_flutter/amplitude.dart';
+import 'package:classmatch/app/controller/alarm_service.dart';
 import 'package:classmatch/app/controller/auth_service.dart';
 import 'package:classmatch/app/routes/routes.dart';
+import 'package:classmatch/main.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'color.dart';
 
-class NavBar extends StatelessWidget {
+class NavBar extends StatefulWidget {
   const NavBar({super.key});
+
+  @override
+  State<NavBar> createState() => _NavBarState();
+}
+
+class _NavBarState extends State<NavBar> {
+  @override
+  void initState() {
+    final alarmService = context.read<AlarmService>();
+    final authService = context.read<AuthService>();
+    final user = authService.currentUser();
+    // 프로필 아이디
+    final talkNameFromSever = alarmService.findtalkName(user!.uid);
+    talkNameFromSever.then((val) {
+      // int가 나오면 해당 값을 출력
+      debugPrint('처음서버값: $val');
+      //해당 함수는 빌드가 끝난 다음 수행 된다.
+      //https://velog.io/@jun7332568/%ED%94%8C%EB%9F%AC%ED%84%B0flutter-setState-or-markNeedsBuild-called-during-build.-%EC%98%A4%EB%A5%98-%ED%95%B4%EA%B2%B0
+      // WidgetsBinding.instance!.addPostFrameCallback((_) {
+      talkName = val;
+    }).catchError((error) {
+      // error가 해당 에러를 출력
+      debugPrint('error: $error');
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
