@@ -3,6 +3,7 @@ import 'package:classmatch/app/controller/alarm_service.dart';
 import 'package:classmatch/app/controller/auth_service.dart';
 import 'package:classmatch/app/ui/alarmlist.dart';
 import 'package:classmatch/app/ui/globa_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -46,6 +47,11 @@ class _FavareaSelectPageState extends State<FavareaSelectPage> {
           //endDrawer: NavBar(),
           backgroundColor: Palette.secondaryBackground,
           appBar: AppBar(
+            leading: CupertinoNavigationBarBackButton(
+              color: Palette.gray66,
+              // icon: const Icon(CupertinoIcons.back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             iconTheme: const IconThemeData(color: Palette.gray66),
             elevation: 0,
             backgroundColor: Palette.mainBackground,
@@ -173,7 +179,7 @@ class _FavareaSelectPageState extends State<FavareaSelectPage> {
                             child: Text("등록",
                                 style: TextStyle(
                                   color: Palette.gray33,
-                                  fontSize: 16,
+                                  fontSize: 14,
                                   letterSpacing: -0.33,
                                 )),
                           ),

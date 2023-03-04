@@ -5,6 +5,7 @@ import 'package:classmatch/app/ui/globa_widget.dart';
 import 'package:classmatch/app/ui/navBar.dart';
 import 'package:classmatch/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -109,6 +110,8 @@ class _ArlamListPageState extends State<ArlamListPage> {
               endDrawer: const NavBar(),
               backgroundColor: Palette.secondaryBackground,
               appBar: AppBar(
+                automaticallyImplyLeading: false,
+
                 iconTheme: const IconThemeData(color: Palette.gray66),
                 elevation: 0,
                 backgroundColor: Palette.mainBackground,
@@ -122,6 +125,16 @@ class _ArlamListPageState extends State<ArlamListPage> {
                       ),
                 ),
                 centerTitle: true,
+                actions: [
+                  Builder(
+                    builder: (context) => IconButton(
+                      icon: const Icon(CupertinoIcons.bars),
+                      onPressed: () => Scaffold.of(context).openEndDrawer(),
+                      tooltip: MaterialLocalizations.of(context)
+                          .openAppDrawerTooltip,
+                    ),
+                  ),
+                ],
                 // leading: IconButton(
                 //   onPressed: () {},
                 //   icon: Icon(Icons.calendar_month),

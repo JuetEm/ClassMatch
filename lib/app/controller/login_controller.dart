@@ -17,7 +17,7 @@ class LoginController {
 
     User? user;
     isKakaoInstalled = await isKakaoTalkInstalled();
-    print("isKakaoInstalled : $isKakaoInstalled");
+    // print("isKakaoInstalled : $isKakaoInstalled");
     OAuthToken token = isKakaoInstalled
         ? await UserApi.instance.loginWithKakaoTalk()
         : await UserApi.instance.loginWithKakaoAccount();
@@ -31,12 +31,12 @@ class LoginController {
       headers: {HttpHeaders.authorizationHeader: 'Bearer ${token.accessToken}'},
     ); */
 
-    print("user.id : ${user.id}");
-    print("user.kakaoAccount?.email : ${user.kakaoAccount?.email}");
-    print(
-        "user.kakaoAccount?.profile?.nickname : ${user.kakaoAccount?.profile?.nickname}");
-    print(
-        "user?.kakaoAccount?.profile?.profileImageUrl : ${user.kakaoAccount?.profile?.profileImageUrl}");
+    // print("user.id : ${user.id}");
+    // print("user.kakaoAccount?.email : ${user.kakaoAccount?.email}");
+    // print(
+    //     "user.kakaoAccount?.profile?.nickname : ${user.kakaoAccount?.profile?.nickname}");
+    // print(
+    //     "user?.kakaoAccount?.profile?.profileImageUrl : ${user.kakaoAccount?.profile?.profileImageUrl}");
 
     String? id = user.id.toString();
     String? email = user.kakaoAccount?.email.toString();
@@ -56,8 +56,8 @@ class LoginController {
     final FA.User? fUser = userCredential.user;
 
     currentUser = _firebaseAuth.currentUser!;
-    print(
-        "kakao login : currentUser email : ${currentUser.email}, currentUser photoURL : ${currentUser.photoURL}, currentUser displayName : ${currentUser.displayName}");
+    // print(
+    //     "kakao login : currentUser email : ${currentUser.email}, currentUser photoURL : ${currentUser.photoURL}, currentUser displayName : ${currentUser.displayName}");
 
     String? fEmail = fUser?.email;
     String? fUrl = fUser?.photoURL;

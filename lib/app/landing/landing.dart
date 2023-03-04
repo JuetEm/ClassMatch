@@ -285,50 +285,46 @@ class _LandingPageState extends State<LandingPage> {
                       //     );
                       //   },
                       // ),
-                      Offstage(
-                        offstage: finishFlag,
-                        child: InkWell(
-                          key: directKey,
-                          child: Image.asset(
-                            'assets/images/Landing_05.png',
-                            width: 360,
-                            // height: 4000,
-                            // fit: BoxFit.cover,
-                          ),
-                          onTap: () {
-                            Amplitude.getInstance()
-                                .logEvent('BTN_CLK : LAND_FREE');
-                            html.window.open(
-                                'https://open.kakao.com/o/gErOOU6e', 'new tab');
-                            // // 회원가입
-                            // landingService.create(
-                            //   name: nameController.text,
-                            //   email: emailController.text,
-                            //   phoneNumber: phoneNumberController.text,
-                            //   isChecked: _isChecked,
-                            //   onSuccess: () {
-                            //     nameController.clear();
-                            //     emailController.clear();
-                            //     phoneNumberController.clear();
-
-                            //     flutterDialog(
-                            //         context, "무료 체험 신청이 완료되었습니다");
-
-                            //     // // 회원가입 성공
-                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            //     //   content: Text("무료 체험 신청이 완료되었습니다"),
-                            //     // ));
-                            //   },
-                            //   onError: (err) {
-                            //     flutterDialog(context, err);
-                            //     // // 에러 발생
-                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            //     //   content: Text(err),
-                            //     // ));
-                            //   },
-                            // );
-                          },
+                      InkWell(
+                        child: Image.asset(
+                          'assets/images/Landing_05.png',
+                          width: 360,
+                          // height: 4000,
+                          // fit: BoxFit.cover,
                         ),
+                        onTap: () {
+                          Amplitude.getInstance()
+                              .logEvent('BTN_CLK : LAND_FREE_TOP');
+                          html.window.open(
+                              'https://open.kakao.com/o/gErOOU6e', 'new tab');
+                          // // 회원가입
+                          // landingService.create(
+                          //   name: nameController.text,
+                          //   email: emailController.text,
+                          //   phoneNumber: phoneNumberController.text,
+                          //   isChecked: _isChecked,
+                          //   onSuccess: () {
+                          //     nameController.clear();
+                          //     emailController.clear();
+                          //     phoneNumberController.clear();
+
+                          //     flutterDialog(
+                          //         context, "무료 체험 신청이 완료되었습니다");
+
+                          //     // // 회원가입 성공
+                          //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                          //     // ));
+                          //   },
+                          //   onError: (err) {
+                          //     flutterDialog(context, err);
+                          //     // // 에러 발생
+                          //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //     //   content: Text(err),
+                          //     // ));
+                          //   },
+                          // );
+                        },
                       ),
                       Image.asset(
                         'assets/images/Landing_04.png',
@@ -686,50 +682,47 @@ class _LandingPageState extends State<LandingPage> {
 
                       /// 이름
 
-                      Offstage(
-                        offstage: finishFlag,
-                        child: InkWell(
-                          key: directKey,
-                          child: Image.asset(
-                            'assets/images/Landing_05.png',
-                            width: 360,
-                            // height: 4000,
-                            // fit: BoxFit.cover,
-                          ),
-                          onTap: () {
-                            Amplitude.getInstance()
-                                .logEvent('BTN_CLK : LAND_FREE');
-                            html.window.open(
-                                'https://open.kakao.com/o/gErOOU6e', 'new tab');
-                            // // 회원가입
-                            // landingService.create(
-                            //   name: nameController.text,
-                            //   email: emailController.text,
-                            //   phoneNumber: phoneNumberController.text,
-                            //   isChecked: _isChecked,
-                            //   onSuccess: () {
-                            //     nameController.clear();
-                            //     emailController.clear();
-                            //     phoneNumberController.clear();
-
-                            //     flutterDialog(
-                            //         context, "무료 체험 신청이 완료되었습니다");
-
-                            //     // // 회원가입 성공
-                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            //     //   content: Text("무료 체험 신청이 완료되었습니다"),
-                            //     // ));
-                            //   },
-                            //   onError: (err) {
-                            //     flutterDialog(context, err);
-                            //     // // 에러 발생
-                            //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            //     //   content: Text(err),
-                            //     // ));
-                            //   },
-                            // );
-                          },
+                      InkWell(
+                        key: directKey,
+                        child: Image.asset(
+                          'assets/images/Landing_05.png',
+                          width: 360,
+                          // height: 4000,
+                          // fit: BoxFit.cover,
                         ),
+                        onTap: () {
+                          Amplitude.getInstance()
+                              .logEvent('BTN_CLK : LAND_FREE');
+                          html.window.open(
+                              'https://open.kakao.com/o/gErOOU6e', 'new tab');
+                          // // 회원가입
+                          // landingService.create(
+                          //   name: nameController.text,
+                          //   email: emailController.text,
+                          //   phoneNumber: phoneNumberController.text,
+                          //   isChecked: _isChecked,
+                          //   onSuccess: () {
+                          //     nameController.clear();
+                          //     emailController.clear();
+                          //     phoneNumberController.clear();
+
+                          //     flutterDialog(
+                          //         context, "무료 체험 신청이 완료되었습니다");
+
+                          //     // // 회원가입 성공
+                          //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //     //   content: Text("무료 체험 신청이 완료되었습니다"),
+                          //     // ));
+                          //   },
+                          //   onError: (err) {
+                          //     flutterDialog(context, err);
+                          //     // // 에러 발생
+                          //     // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          //     //   content: Text(err),
+                          //     // ));
+                          //   },
+                          // );
+                        },
                       ),
                     ],
                   ),

@@ -1,5 +1,6 @@
 import 'package:amplitude_flutter/amplitude.dart';
 import 'package:classmatch/main.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter/material.dart';
 import 'color.dart';
@@ -25,6 +26,11 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
           //endDrawer: NavBar(),
           backgroundColor: Palette.secondaryBackground,
           appBar: AppBar(
+            leading: CupertinoNavigationBarBackButton(
+              color: Palette.gray66,
+              // icon: const Icon(CupertinoIcons.back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             iconTheme: const IconThemeData(color: Palette.gray66),
             elevation: 0,
             backgroundColor: Palette.mainBackground,
@@ -98,7 +104,7 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
                           ),
                           SizedBox(width: 10),
                           Icon(
-                            Icons.arrow_circle_right,
+                            CupertinoIcons.arrow_right_circle_fill,
                             color: Palette.gray66,
                             size: 22,
                           ),
@@ -141,7 +147,7 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
                           ),
                           SizedBox(width: 10),
                           Icon(
-                            Icons.arrow_circle_right,
+                            CupertinoIcons.arrow_right_circle_fill,
                             color: Palette.gray66,
                             size: 22,
                           ),
@@ -183,7 +189,7 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
                           ),
                           SizedBox(width: 10),
                           Icon(
-                            Icons.arrow_circle_right,
+                            CupertinoIcons.arrow_right_circle_fill,
                             color: Palette.gray66,
                             size: 22,
                           ),
@@ -225,7 +231,7 @@ class _OpenchatGuidePageState extends State<OpenchatGuidePage> {
                           ),
                           SizedBox(width: 10),
                           Icon(
-                            Icons.arrow_circle_right,
+                            CupertinoIcons.arrow_right_circle_fill,
                             color: Palette.gray66,
                             size: 22,
                           ),

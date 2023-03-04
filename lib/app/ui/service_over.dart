@@ -1,4 +1,5 @@
 import 'package:classmatch/app/controller/auth_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'color.dart';
@@ -20,6 +21,11 @@ class ServiceOverPage extends StatelessWidget {
           //endDrawer: NavBar(),
           backgroundColor: Palette.secondaryBackground,
           appBar: AppBar(
+            leading: CupertinoNavigationBarBackButton(
+              color: Palette.gray66,
+              // icon: const Icon(CupertinoIcons.back),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
             iconTheme: const IconThemeData(color: Palette.gray66),
             elevation: 0,
             backgroundColor: Palette.mainBackground,

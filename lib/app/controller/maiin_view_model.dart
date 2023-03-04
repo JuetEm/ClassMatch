@@ -1,5 +1,6 @@
 import 'package:classmatch/app/controller/social_login.dart';
 import 'package:flutter/material.dart';
+// ignore: depend_on_referenced_packages
 import 'package:kakao_flutter_sdk_user/kakao_flutter_sdk_user.dart';
 
 class MainViewModel {
